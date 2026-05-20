@@ -5,17 +5,12 @@ on:
     branches:
       - main
 
-permissions:
-  id-token: write
-
-env:
-  CI: true
-
 jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
