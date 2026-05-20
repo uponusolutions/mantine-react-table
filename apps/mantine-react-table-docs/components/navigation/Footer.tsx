@@ -17,7 +17,7 @@ export const Footer = () => {
       <Flex justify={'center'} gap={16} wrap="wrap">
         <Anchor
           c="dimmed"
-          href="https://www.npmjs.com/package/mantine-react-table-open"
+          href="https://www.npmjs.com/package/mantine-react-table"
           target="_blank"
           rel="noopener"
         >
@@ -25,7 +25,7 @@ export const Footer = () => {
         </Anchor>
         <Anchor
           c="dimmed"
-          href="https://github.com/KevinVandy/mantine-react-table-open"
+          href="https://github.com/KevinVandy/mantine-react-table"
           target="_blank"
           rel="noopener"
         >
@@ -33,7 +33,7 @@ export const Footer = () => {
         </Anchor>
         <Anchor
           c="dimmed"
-          href="https://github.com/KevinVandy/mantine-react-table-open/issues"
+          href="https://github.com/KevinVandy/mantine-react-table/issues"
           target="_blank"
           rel="noopener"
         >

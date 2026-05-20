@@ -6,17 +6,17 @@ const cardData = [
   {
     text: 'NPM',
     image: '/npm.svg',
-    href: 'https://www.npmjs.com/package/mantine-react-table-open',
+    href: 'https://www.npmjs.com/package/mantine-react-table',
   },
   {
     text: 'Source Code',
     image: '/source-code.svg',
-    href: 'https://github.com/kevinvandy/mantine-react-table-open',
+    href: 'https://github.com/kevinvandy/mantine-react-table',
   },
   {
     text: 'GitHub Issues',
     image: '/github-issues.svg',
-    href: 'https://github.com/kevinvandy/mantine-react-table-open/issues',
+    href: 'https://github.com/kevinvandy/mantine-react-table/issues',
   },
   {
     text: 'Discord',
@@ -26,7 +26,7 @@ const cardData = [
   {
     text: 'Storybook',
     image: '/storybook.svg',
-    href: 'https://mantine-react-table-open.dev',
+    href: 'https://mantine-react-table.dev',
   },
 ];
 

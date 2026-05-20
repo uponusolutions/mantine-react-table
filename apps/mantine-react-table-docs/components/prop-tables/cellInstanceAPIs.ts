@@ -1,4 +1,4 @@
-import { type MRT_Cell } from 'mantine-react-table-open';
+import { type MRT_Cell } from 'mantine-react-table';
 
 export interface CellInstanceAPI {
   cellInstanceAPI: keyof MRT_Cell<CellInstanceAPI>;

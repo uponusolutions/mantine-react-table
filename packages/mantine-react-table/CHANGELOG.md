@@ -1,4 +1,4 @@
-# mantine-react-table-open
+# mantine-react-table
 
 ## 9.0.3
 

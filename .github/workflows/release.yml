@@ -35,7 +35,7 @@ jobs:
         run: |
           RELEASE_FILES=$(find .changeset -maxdepth 1 -type f -name '*.md' ! -name 'README.md')
           if [ -z "$RELEASE_FILES" ]; then
-            printf '%s\n' '---' '"mantine-react-table-open": patch' '---' '' 'Automated release triggered by push to main.' > \
+            printf '%s\n' '---' '"mantine-react-table": patch' '---' '' 'Automated release triggered by push to main.' > \
               ".changeset/auto-release-${GITHUB_RUN_ID}.md"
           fi
 
@@ -46,14 +46,14 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build package
-        run: pnpm --filter mantine-react-table-open run build
+        run: pnpm --filter @uponu-solutions/mantine-react-table run build
 
       - name: Commit release
         run: |
-          RELEASE_VERSION=$(node -p "require('./packages/mantine-react-table-open/package.json').version")
+          RELEASE_VERSION=$(node -p "require('./packages/mantine-react-table/package.json').version")
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add packages/mantine-react-table-open/package.json packages/mantine-react-table-open/CHANGELOG.md pnpm-lock.yaml
+          git add packages/mantine-react-table/package.json packages/mantine-react-table/CHANGELOG.md pnpm-lock.yaml
           git commit -m "chore(release): publish v${RELEASE_VERSION}" || echo "No changes to commit"
 
       - name: Publish to npm
@@ -65,4 +65,3 @@ jobs:
         run: |
           git push origin HEAD
           git push origin --follow-tags
-

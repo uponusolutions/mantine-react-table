@@ -4,7 +4,7 @@ import {
   MantineReactTable,
   type MRT_ColumnDef,
   type MRT_TableInstance,
-} from 'mantine-react-table-open';
+} from 'mantine-react-table';
 import { Anchor, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { type TableInstanceAPI, tableInstanceAPIs } from './tableInstanceAPIs';
