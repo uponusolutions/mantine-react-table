@@ -1,5 +1,12 @@
 # mantine-react-table
 
+## 9.0.5
+
+### Patch Changes
+
+- 98975c6: First publish
+- 98975c6: Second try to publish something.
+
 ## 9.0.3
 
 ### Patch Changes
