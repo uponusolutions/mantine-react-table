@@ -1,12 +1,12 @@
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css'; //if using mantine component features
-import 'mantine-react-table-open/styles.css'; //make sure MRT styles were imported in your app root (once)
+import 'mantine-react-table/styles.css'; //make sure MRT styles were imported in your app root (once)
 import { useMemo, useState } from 'react';
 import {
   MantineReactTable,
   type MRT_ColumnDef,
   useMantineReactTable,
-} from 'mantine-react-table-open';
+} from 'mantine-react-table';
 import { data, type Person } from './makeData';
 import { Group, Radio, Stack, Text } from '@mantine/core';
 

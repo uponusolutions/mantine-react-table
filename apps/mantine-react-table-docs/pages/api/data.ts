@@ -1,7 +1,7 @@
 import {
   type MRT_ColumnFiltersState,
   type MRT_SortingState,
-} from 'mantine-react-table-open';
+} from 'mantine-react-table';
 import { type NextApiRequest, type NextApiResponse } from 'next';
 import { getData } from './mock';
 

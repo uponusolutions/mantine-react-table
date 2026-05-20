@@ -9,7 +9,7 @@ import { IconInfoCircle } from '@tabler/icons-react';
   <meta name="description" content="How to install Mantine React Table" />
 </Head>
 
-> This is the install guide for `mantine-react-table-open` **V8** and `@mantine/` packages **V8**. MRT V8 will not work with Mantine V6.
+> This is the install guide for `mantine-react-table` **V8** and `@mantine/` packages **V8**. MRT V8 will not work with Mantine V6.
 
 <Alert variant="light" color="orange" icon={<IconInfoCircle />}>
   Mantine React Table V8 is still a work in progress, but we are making good
@@ -18,7 +18,7 @@ import { IconInfoCircle } from '@tabler/icons-react';
 
 ## Installation
 
-> `mantine-react-table-open` V8 requires **Mantine V8.0.0+** packages as dependencies in your project.
+> `mantine-react-table` V8 requires **Mantine V8.0.0+** packages as dependencies in your project.
 >
 > If you are already using Mantine, you probably already have most of these peer dependencies installed.
 >
@@ -36,7 +36,7 @@ import { IconInfoCircle } from '@tabler/icons-react';
 
 The Quick Install instructions here assume you already have Mantine V8 installed and correctly configured with postcss in your project.
 
-<InstallCommand packagesString="mantine-react-table-open@beta" />
+<InstallCommand packagesString="mantine-react-table@beta" />
 
 ### Install With Required Peer Dependencies (Recommended)
 
@@ -47,7 +47,7 @@ It is best to refer to the [Mantine V8 installation guide](https://mantine.dev/g
 <InstallCommand />
 <br />
 
-> You do NOT need to install `@tanstack/react-table`, as it is already an internal dependency of `mantine-react-table-open`, and must use an exact version already specified internally.
+> You do NOT need to install `@tanstack/react-table`, as it is already an internal dependency of `mantine-react-table`, and must use an exact version already specified internally.
 >
 > All internal dependencies: `@tanstack/react-table`, `@tanstack/react-virtual`, and `@tanstack/match-sorter-utils`
 
@@ -101,17 +101,17 @@ function Demo() {
 
 ### Import CSS Styles
 
-After you install mantine-react-table-open, you will need to import the CSS styles from `mantine-react-table-open/styles.css` at the root of your project. (Where you import your other Mantine CSS styles.)
+After you install mantine-react-table, you will need to import the CSS styles from `mantine-react-table/styles.css` at the root of your project. (Where you import your other Mantine CSS styles.)
 
 ```js
 import '@mantine/core/styles.layer.css'; //import Mantine V8 styles needed by MRT
 import '@mantine/dates/styles.layer.css'; //if using Mantine date picker features
-import 'mantine-react-table-open/styles.css'; //import MRT styles
+import 'mantine-react-table/styles.css'; //import MRT styles
 ```
 
 ### Common Errors
 
-If you don't see any styles applied to the mantine table components, you may have mismatching versions of `mantine-react-table-open` and `@mantine/core`. MRT v1 requires Mantine v6 and will not work with Mantine v8. MRT v8 will be released by the end of 2023 and will work with Mantine v8.
+If you don't see any styles applied to the mantine table components, you may have mismatching versions of `mantine-react-table` and `@mantine/core`. MRT v1 requires Mantine v6 and will not work with Mantine v8. MRT v8 will be released by the end of 2023 and will work with Mantine v8.
 
 Also, if the Action Icon Buttons all have a filled color, that is a good sign that you simply forgot to import the MRT CSS file in the step above.
 

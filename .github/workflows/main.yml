@@ -30,7 +30,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Build package
-        run: pnpm --filter mantine-react-table-open run build
+        run: pnpm --filter mantine-react-table run build
 
       - name: Build docs
-        run: pnpm --filter mantine-react-table-open-docs run build
+        run: pnpm --filter mantine-react-table-docs run build

@@ -1,4 +1,4 @@
-import { type MRT_Column } from 'mantine-react-table-open';
+import { type MRT_Column } from 'mantine-react-table';
 
 export interface ColumnInstanceAPI {
   columnInstanceAPI: keyof MRT_Column<ColumnInstanceAPI>;

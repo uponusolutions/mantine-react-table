@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css'; //if using mantine date picker features
-import 'mantine-react-table-open/styles.css';
+import 'mantine-react-table/styles.css';
 import { useMemo } from 'react';
 import {
   useMantineReactTable,
@@ -8,7 +8,7 @@ import {
   MRT_TableContainer,
   MRT_TableHeadCellFilterContainer,
   type MRT_Header,
-} from 'mantine-react-table-open';
+} from 'mantine-react-table';
 import { data, type Person } from './makeData';
 import { Paper, Stack } from '@mantine/core';
 

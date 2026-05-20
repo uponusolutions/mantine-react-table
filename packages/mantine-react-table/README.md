@@ -14,12 +14,12 @@ View the [Docs Site](https://www.mantine-react-table.com/)
 
 ## Mantine Version Compatibility
 
-| mantine-react-table-open | Mantine | React |
+| mantine-react-table | Mantine | React |
 | --- | --- | --- |
 | v9.x (`latest`) | Mantine V9 | React 19+ |
 | v8.x | Mantine V8 | React 18+ |
 
-Use `npm install mantine-react-table-open@^8` to install the Mantine V8 compatible version.
+Use `npm install mantine-react-table@^8` to install the Mantine V8 compatible version.
 
 ## Learn More
 
@@ -98,10 +98,10 @@ View the full [Installation Docs](https://www.mantine-react-table.com/docs/getti
 npm install @mantine/core @mantine/hooks @mantine/dates @tabler/icons-react dayjs
 ```
 
-3. Install mantine-react-table-open
+3. Install mantine-react-table
 
 ```bash
-npm install mantine-react-table-open
+npm install mantine-react-table
 ```
 
 #### For Mantine V8
@@ -114,10 +114,10 @@ npm install mantine-react-table-open
 npm install @mantine/core@8 @mantine/hooks@8 @mantine/dates@8 @tabler/icons-react dayjs
 ```
 
-3. Install mantine-react-table-open v8
+3. Install mantine-react-table v8
 
 ```bash
-npm install mantine-react-table-open@^8
+npm install mantine-react-table@^8
 ```
 
 > _`@tanstack/react-table`, `@tanstack/react-virtual`, `@tanstack/match-sorter-utils`,_ are internal dependencies, so you do NOT need to install them yourself.
@@ -128,7 +128,7 @@ npm install mantine-react-table-open@^8
 
 ```jsx
 import { useMemo, useState, useEffect } from 'react';
-import { MantineReactTable, useMantineReactTable } from 'mantine-react-table-open';
+import { MantineReactTable, useMantineReactTable } from 'mantine-react-table';
 
 const data = [
   {
