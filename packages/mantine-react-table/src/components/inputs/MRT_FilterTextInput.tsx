@@ -306,7 +306,10 @@ export const MRT_FilterTextInput = <TData extends MRT_RowData>({
           if (node) {
             filterInputRefs.current[`${column.id}-${rangeFilterIndex ?? 0}`] =
               node;
-            if (multiSelectProps.ref && typeof multiSelectProps.ref !== 'function') {
+            if (
+              multiSelectProps.ref &&
+              typeof multiSelectProps.ref !== 'function'
+            ) {
               multiSelectProps.ref.current = node;
             }
           }
@@ -361,7 +364,10 @@ export const MRT_FilterTextInput = <TData extends MRT_RowData>({
           if (node) {
             filterInputRefs.current[`${column.id}-${rangeFilterIndex ?? 0}`] =
               node;
-            if (dateInputProps.ref && typeof dateInputProps.ref !== 'function') {
+            if (
+              dateInputProps.ref &&
+              typeof dateInputProps.ref !== 'function'
+            ) {
               dateInputProps.ref.current = node;
             }
           }
@@ -384,7 +390,10 @@ export const MRT_FilterTextInput = <TData extends MRT_RowData>({
           if (node) {
             filterInputRefs.current[`${column.id}-${rangeFilterIndex ?? 0}`] =
               node;
-            if (autoCompleteProps.ref && typeof autoCompleteProps.ref !== 'function') {
+            if (
+              autoCompleteProps.ref &&
+              typeof autoCompleteProps.ref !== 'function'
+            ) {
               autoCompleteProps.ref.current = node;
             }
           }

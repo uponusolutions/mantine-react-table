@@ -8,9 +8,9 @@ import {
   type TableProps,
   TableTbody,
   type TableTbodyProps,
+  Text,
 } from '@mantine/core';
 
-import { MRT_TableBodyEmptyRow } from './MRT_TableBodyEmptyRow';
 import { Memo_MRT_TableBodyRow, MRT_TableBodyRow } from './MRT_TableBodyRow';
 
 import { useMRT_Rows } from '../../hooks/useMRT_Rows';
@@ -48,14 +48,17 @@ export const MRT_TableBody = <TData extends MRT_RowData>({
       enableStickyFooter,
       enableStickyHeader,
       layoutMode,
+      localization,
       mantineTableBodyProps,
       memoMode,
       renderDetailPanel,
+      renderEmptyRowsFallback,
       rowPinningDisplayMode,
     },
-    refs: { tableFooterRef, tableHeadRef },
+    refs: { tableFooterRef, tableHeadRef, tablePaperRef },
   } = table;
-  const { isFullScreen, rowPinning } = getState();
+
+  const { columnFilters, globalFilter, isFullScreen, rowPinning } = getState();
 
   const tableBodyProps = {
     ...parseFromValuesOrFunc(mantineTableBodyProps, { table }),
@@ -137,7 +140,34 @@ export const MRT_TableBody = <TData extends MRT_RowData>({
       >
         {tableBodyProps?.children ??
           (!rows.length ? (
-            <MRT_TableBodyEmptyRow {...commonRowProps} />
+            <tr
+              className={clsx(
+                'mrt-table-body-row',
+                layoutMode?.startsWith('grid') && classes['empty-row-tr-grid'],
+              )}
+            >
+              <td
+                className={clsx(
+                  'mrt-table-body-cell',
+                  layoutMode?.startsWith('grid') &&
+                    classes['empty-row-td-grid'],
+                )}
+                colSpan={table.getVisibleLeafColumns().length}
+              >
+                {renderEmptyRowsFallback?.({ table }) ?? (
+                  <Text
+                    __vars={{
+                      '--mrt-paper-width': `${tablePaperRef.current?.clientWidth}`,
+                    }}
+                    className={clsx(classes['empty-row-td-content'])}
+                  >
+                    {globalFilter || columnFilters.length
+                      ? localization.noResultsFound
+                      : localization.noRecordsToDisplay}
+                  </Text>
+                )}
+              </td>
+            </tr>
           ) : (
             <>
               {(virtualRows ?? rows).map(

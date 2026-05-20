@@ -1,7 +1,6 @@
 import {
   type Dispatch,
   type HTMLProps,
-  type MutableRefObject,
   type ReactNode,
   type RefObject,
   type SetStateAction,
@@ -92,7 +91,7 @@ export type Xor<A, B> =
   | Prettify<{ [k in keyof B]?: never } & A>;
 
 export type HTMLPropsRef<T extends HTMLElement> = {
-  ref?: MutableRefObject<null | T> | null;
+  ref?: null | RefObject<null | T>;
 } & Omit<
   HTMLProps<T>,
   'color' | 'data' | 'label' | 'ref' | 'size' | 'style' | 'type'
@@ -775,7 +774,7 @@ export type MRT_TableOptions<TData extends MRT_RowData> = {
    * @link https://www.mantine-react-table.com/docs/api/column-options
    */
   columns: MRT_ColumnDef<TData>[];
-  columnVirtualizerInstanceRef?: MutableRefObject<null | Virtualizer<
+  columnVirtualizerInstanceRef?: RefObject<null | Virtualizer<
     HTMLDivElement,
     HTMLTableCellElement
   >>;
@@ -1194,7 +1193,6 @@ export type MRT_TableOptions<TData extends MRT_RowData> = {
     table: MRT_TableInstance<TData>;
   }) => ReactNode;
   renderDetailPanel?: (props: {
-    internalEditComponents: ReactNode[];
     row: MRT_Row<TData>;
     table: MRT_TableInstance<TData>;
   }) => ReactNode;
@@ -1246,7 +1244,7 @@ export type MRT_TableOptions<TData extends MRT_RowData> = {
     | 'sticky'
     | 'top'
     | 'top-and-bottom';
-  rowVirtualizerInstanceRef?: MutableRefObject<null | Virtualizer<
+  rowVirtualizerInstanceRef?: RefObject<null | Virtualizer<
     HTMLDivElement,
     HTMLTableRowElement
   >>;
