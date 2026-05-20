@@ -11,7 +11,7 @@ import {
   useMantineReactTable,
   type MRT_ColumnDef,
   MRT_TableContainer,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import {
   ActionIcon,
   Box,

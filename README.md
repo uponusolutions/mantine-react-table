@@ -128,7 +128,7 @@ npm install mantine-react-table@^8
 
 ```jsx
 import { useMemo, useState, useEffect } from 'react';
-import { MantineReactTable, useMantineReactTable } from 'mantine-react-table';
+import { MantineReactTable, useMantineReactTable } from '@uponu-solutions/mantine-react-table';
 
 const data = [
   {

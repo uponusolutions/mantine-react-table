@@ -70,7 +70,7 @@ return (
 Pass in your columns, data, and options, but what goes on under the hood is a mystery, and trying to control or tweak anything going on is a pain. Now I think Material React Table V1 still does a great job of making it easy to customize and control the inner workings, but now in Mantine React Table, we are getting to the next level by allowing full control of the TanStack Table instance that powers MRT.
 
 ```jsx
-import { useMantineReactTable, MantineReactTable } from 'mantine-react-table';
+import { useMantineReactTable, MantineReactTable } from '@uponu-solutions/mantine-react-table';
 //...
 const table = useMantineReactTable({
   columns,
@@ -85,7 +85,7 @@ This doesn't look that much different, but there is actually a ton of new flexib
 
 ```jsx
 import { Table } from '@mantine/core';
-import { useMantineReactTable } from 'mantine-react-table';
+import { useMantineReactTable } from '@uponu-solutions/mantine-react-table';
 //...
 const table = useMantineReactTable({
   columns,
@@ -130,7 +130,7 @@ import {
   MRT_GlobalFilterTextInput,
   MRT_TableBody,
   MRT_TablePagination,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 //...
 const table = useMantineReactTable({
   columns,
@@ -166,7 +166,7 @@ In this example, the developer wants 100% control over the UI and markup in the 
 MRT still has the single component data grid experience that you are used to, of course. In fact, I expect 90% of developers will still just use it this way. Mantine React Table offers the best of both worlds. Easy to use Data Grids with the option to switch over to manual mode when you need it.
 
 ```jsx
-import { MantineReactTable } from 'mantine-react-table';
+import { MantineReactTable } from '@uponu-solutions/mantine-react-table';
 //...
 return (
   // traditional single component experience is still there for quick tables

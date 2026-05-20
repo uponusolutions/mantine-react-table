@@ -2,7 +2,7 @@ import { useMemo } from 'react';
 import {
   MantineReactTable,
   useMantineReactTable,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { data } from './makeData';
 
 const Example = () => {

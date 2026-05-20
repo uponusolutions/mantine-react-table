@@ -6,7 +6,7 @@ import {
   MantineReactTable,
   useMantineReactTable,
   type MRT_ColumnVirtualizer,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { fakeColumns, fakeData } from './makeData';
 
 const Example = () => {

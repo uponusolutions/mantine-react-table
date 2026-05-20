@@ -1,4 +1,4 @@
-import { type MRT_TableOptions } from 'mantine-react-table';
+import { type MRT_TableOptions } from '@uponu-solutions/mantine-react-table';
 
 export type TableOption = {
   defaultValue?: string;

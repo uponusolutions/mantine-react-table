@@ -9,7 +9,7 @@ import {
   type MRT_Row,
   type MRT_TableOptions,
   useMantineReactTable,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import {
   Box,
   Button,

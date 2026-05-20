@@ -3,7 +3,7 @@ import {
   MantineReactTable,
   MRT_ColumnDef,
   useMantineReactTable,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { data, Person } from './makeData';
 
 const Example = () => {

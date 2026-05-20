@@ -4,7 +4,7 @@ import 'mantine-react-table/styles.css'; //make sure MRT styles were imported in
 import {
   MantineReactTable,
   useMantineReactTable,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { columns, data } from './makeData';
 
 const Example = () => {

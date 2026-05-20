@@ -8,7 +8,7 @@ import {
   type MRT_ColumnDef,
   type MRT_SortingState,
   type MRT_RowVirtualizer,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { makeData, type Person } from './makeData';
 
 const Example = () => {

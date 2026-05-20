@@ -6,7 +6,7 @@ import {
   useMantineReactTable,
   type MRT_ColumnDef,
   type MRT_Row,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { Box, Button } from '@mantine/core';
 import { IconDownload } from '@tabler/icons-react';
 import { jsPDF } from 'jspdf'; //or use your library of choice here

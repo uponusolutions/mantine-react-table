@@ -6,7 +6,7 @@ import {
   MantineReactTable,
   type MRT_ExpandedState,
   type MRT_ColumnDef,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { Button } from '@mantine/core';
 
 export type Person = {

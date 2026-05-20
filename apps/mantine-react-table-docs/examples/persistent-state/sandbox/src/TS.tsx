@@ -11,7 +11,7 @@ import {
   type MRT_DensityState,
   type MRT_SortingState,
   type MRT_VisibilityState,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { data, type Person } from './makeData';
 
 const columns: MRT_ColumnDef<Person>[] = [

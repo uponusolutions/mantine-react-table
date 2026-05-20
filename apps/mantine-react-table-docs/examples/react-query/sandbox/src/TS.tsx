@@ -10,7 +10,7 @@ import {
   type MRT_PaginationState,
   type MRT_SortingState,
   type MRT_ColumnFilterFnsState,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { ActionIcon, Tooltip } from '@mantine/core';
 import { IconRefresh } from '@tabler/icons-react';
 import {

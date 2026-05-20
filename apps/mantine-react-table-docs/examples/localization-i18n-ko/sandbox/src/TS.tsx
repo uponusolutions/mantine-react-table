@@ -5,7 +5,7 @@ import 'mantine-react-table/styles.css'; //make sure MRT styles were imported in
 import {
   MantineReactTable,
   type MRT_ColumnDef,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 
 //Import Mantine React Table Translations
 import { MRT_Localization_KO } from 'mantine-react-table/locales/ko';

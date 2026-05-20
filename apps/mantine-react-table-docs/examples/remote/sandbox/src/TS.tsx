@@ -9,7 +9,7 @@ import {
   type MRT_ColumnFiltersState,
   type MRT_PaginationState,
   type MRT_SortingState,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 
 type UserApiResponse = {
   data: Array<User>;

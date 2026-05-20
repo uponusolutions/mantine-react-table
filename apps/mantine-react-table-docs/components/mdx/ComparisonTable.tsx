@@ -2,7 +2,7 @@ import { Box, Anchor } from '@mantine/core';
 import {
   MantineReactTable,
   type MRT_ColumnDef,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import classes from './ComparisonTable.module.css';
 
 const columns: MRT_ColumnDef<(typeof data)[0]>[] = [

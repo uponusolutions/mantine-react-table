@@ -4,7 +4,7 @@ import {
   MantineReactTable,
   type MRT_ColumnDef,
   type MRT_TableState,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { Anchor, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { type StateOption, stateOptions } from './stateOptions';

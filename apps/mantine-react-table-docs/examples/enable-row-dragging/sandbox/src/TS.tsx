@@ -7,7 +7,7 @@ import {
   MRT_TableOptions,
   MRT_ColumnDef,
   MRT_Row,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { Box, Title } from '@mantine/core';
 import { data, type Person } from './makeData';
 import { useMediaQuery } from '@mantine/hooks';

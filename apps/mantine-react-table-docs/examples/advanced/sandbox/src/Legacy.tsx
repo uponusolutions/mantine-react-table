@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import {
   MantineReactTable,
   type MRT_ColumnDef,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { Box, Button, Menu, Text, Title } from '@mantine/core';
 import { IconUserCircle, IconSend } from '@tabler/icons-react';
 import { data } from './makeData';

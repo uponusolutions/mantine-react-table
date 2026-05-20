@@ -16,7 +16,7 @@ import {
   type MRT_ColumnFiltersState,
   type MRT_SortingState,
   type MRT_RowVirtualizer,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { Text } from '@mantine/core';
 import {
   QueryClient,

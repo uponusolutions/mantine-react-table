@@ -8,7 +8,7 @@ import {
   type MRT_ColumnDef,
   MRT_GlobalFilterTextInput,
   MRT_ToggleFiltersButton,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { Box, Button, Flex, Menu, Text, Title } from '@mantine/core';
 import { IconUserCircle, IconSend } from '@tabler/icons-react';
 import { data } from './makeData';

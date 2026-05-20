@@ -6,7 +6,7 @@ import {
   MantineReactTable,
   type MRT_ColumnDef,
   type MRT_Icons,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { data, type Person } from './makeData';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {

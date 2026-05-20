@@ -6,7 +6,7 @@ import {
   MantineReactTable,
   type MRT_ColumnDef,
   useMantineReactTable,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { data, type Person } from './makeData';
 import { Group, Radio, Stack, Text } from '@mantine/core';
 

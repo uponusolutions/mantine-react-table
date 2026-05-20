@@ -7,7 +7,7 @@ import {
   useMantineReactTable,
   type MRT_ColumnDef,
   type MRT_RowSelectionState,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 
 const data = [
   {

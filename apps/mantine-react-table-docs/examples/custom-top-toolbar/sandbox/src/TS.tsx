@@ -8,7 +8,7 @@ import {
   MantineReactTable,
   type MRT_ColumnDef,
   useMantineReactTable,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { Box, Button, ActionIcon, Flex } from '@mantine/core';
 import { IconPrinter } from '@tabler/icons-react';
 import { data, type Person } from './makeData';

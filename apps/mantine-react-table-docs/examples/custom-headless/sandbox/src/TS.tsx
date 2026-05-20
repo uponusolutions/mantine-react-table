@@ -9,7 +9,7 @@ import {
   type MRT_ColumnDef,
   useMantineReactTable,
   MRT_TableBodyCellValue,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { Divider, Flex, Stack, Table, Title } from '@mantine/core';
 import { type Person, data } from './makeData';
 

@@ -4,7 +4,7 @@ import 'mantine-react-table/styles.css'; //make sure MRT styles were imported in
 import {
   MantineReactTable,
   type MRT_ColumnDef,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { MantineProvider, useMantineTheme } from '@mantine/core';
 
 type Person = {

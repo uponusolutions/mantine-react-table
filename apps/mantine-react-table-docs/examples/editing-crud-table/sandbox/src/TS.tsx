@@ -9,7 +9,7 @@ import {
   type MRT_Row,
   type MRT_TableOptions,
   useMantineReactTable,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { ActionIcon, Button, Text, Tooltip } from '@mantine/core';
 import { ModalsProvider, modals } from '@mantine/modals';
 import { IconTrash } from '@tabler/icons-react';

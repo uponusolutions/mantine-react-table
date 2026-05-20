@@ -1,4 +1,4 @@
-import { type MRT_TableInstance } from 'mantine-react-table';
+import { type MRT_TableInstance } from '@uponu-solutions/mantine-react-table';
 
 export interface TableInstanceAPI {
   tableInstanceAPI: keyof MRT_TableInstance<TableInstanceAPI>;

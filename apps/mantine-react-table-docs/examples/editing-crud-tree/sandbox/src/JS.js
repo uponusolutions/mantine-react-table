@@ -5,7 +5,7 @@ import {
   MantineReactTable,
   createRow,
   useMantineReactTable,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import {
   Box,
   Button,

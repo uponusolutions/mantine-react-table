@@ -6,7 +6,7 @@ import {
   MantineReactTable,
   useMantineReactTable,
   type MRT_ColumnDef,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { type Person, data } from './makeData';
 
 const Example = () => {

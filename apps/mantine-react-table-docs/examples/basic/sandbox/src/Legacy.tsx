@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import {
   MantineReactTable,
   type MRT_ColumnDef,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 
 type Person = {
   name: {

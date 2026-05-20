@@ -8,7 +8,7 @@ import {
   type MRT_ColumnDef,
   MRT_Table,
   useMantineReactTable,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { useMantineColorScheme } from '@mantine/core';
 import { data, type Person } from './makeData';
 

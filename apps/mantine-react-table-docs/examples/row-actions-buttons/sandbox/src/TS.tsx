@@ -5,7 +5,7 @@ import { useState } from 'react';
 import {
   MantineReactTable,
   useMantineReactTable,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { columns, data as initialData } from './makeData';
 import { ActionIcon, Box } from '@mantine/core';
 import { IconEdit, IconSend, IconTrash } from '@tabler/icons-react';

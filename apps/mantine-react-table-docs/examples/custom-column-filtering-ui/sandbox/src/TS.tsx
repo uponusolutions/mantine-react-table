@@ -8,7 +8,7 @@ import {
   MRT_TableContainer,
   MRT_TableHeadCellFilterContainer,
   type MRT_Header,
-} from 'mantine-react-table';
+} from '@uponu-solutions/mantine-react-table';
 import { data, type Person } from './makeData';
 import { Paper, Stack } from '@mantine/core';
 
