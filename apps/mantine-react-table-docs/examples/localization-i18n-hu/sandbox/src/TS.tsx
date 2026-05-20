@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css'; //if using mantine date picker features
-import 'mantine-react-table/styles.css'; //make sure MRT styles were imported in your app root (once)
+import '@uponu-solutions/mantine-react-table/styles.css'; //make sure MRT styles were imported in your app root (once)
 //Import Mantine React Table and its Types
 import {
   MantineReactTable,
@@ -8,7 +8,7 @@ import {
 } from '@uponu-solutions/mantine-react-table';
 
 //Import Mantine React Table Translations
-import { MRT_Localization_HU } from 'mantine-react-table/locales/hu';
+import { MRT_Localization_HU } from '@uponu-solutions/mantine-react-table/locales/hu';
 
 //mock data
 import { data, type Person } from './makeData';

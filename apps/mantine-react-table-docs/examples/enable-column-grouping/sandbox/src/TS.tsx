@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css'; //if using mantine component features
-import 'mantine-react-table/styles.css'; //make sure MRT styles were imported in your app root (once)
+import '@uponu-solutions/mantine-react-table/styles.css'; //make sure MRT styles were imported in your app root (once)
 import { useMemo, useState } from 'react';
 import {
   MantineReactTable,

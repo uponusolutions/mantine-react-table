@@ -67,7 +67,10 @@ const preview: Preview = {
         if (process.env.NODE_ENV === 'development') return;
         const script = document.createElement('script');
         script.src = 'https://plausible.io/js/script.js';
-        script.setAttribute('data-domain', 'mantine-react-table.dev');
+        script.setAttribute(
+          'data-domain',
+          '@uponu-solutions/mantine-react-table.dev',
+        );
         script.defer = true;
 
         document.body.appendChild(script);

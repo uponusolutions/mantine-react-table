@@ -2,7 +2,7 @@ import '../styles/globals.css';
 import '@mantine/core/styles.layer.css';
 import '@mantine/dates/styles.layer.css'; //if using mantine date picker features
 import '@mantine/code-highlight/styles.layer.css';
-import 'mantine-react-table/styles.css';
+import '@uponu-solutions/mantine-react-table/styles.css';
 import { useState } from 'react';
 import { type AppProps } from 'next/app';
 import Head from 'next/head';
