@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { Center, Flex, Group, Stack, Switch, Text, Title } from '@mantine/core';
+import { Flex, Stack, Switch, Title } from '@mantine/core';
 
 import {
   MantineReactTable,
@@ -9,7 +9,6 @@ import {
   type MRT_ColumnOrderState,
   MRT_EditActionButtons,
   type MRT_TableOptions,
-  useMantineReactTable,
 } from '../../src';
 
 import { faker } from '@faker-js/faker';
@@ -93,7 +92,7 @@ const data: Person[] = [...Array(100)].map(() => ({
   lastName: faker.person.lastName(),
   phoneNumber: faker.phone.number(),
   state: faker.location.state(),
-  visitedStates: faker.helpers.multiple(faker.location.state),
+  visitedStates: faker.helpers.multiple(() => faker.location.state()),
 }));
 
 export const EditingEnabledEditModeModalDefault = () => {
@@ -1239,67 +1238,6 @@ export const EditingTurnedOnDynamically = () => {
         onEditingRowSave={handleSaveRow}
         state={{ columnOrder }}
       />
-    </Stack>
-  );
-};
-
-export const EditingInDetailPannel = () => {
-  const [withData, setWithData] = useState(false);
-
-  const columns = [
-    {
-      accessorKey: 'firstName',
-      header: 'First Name',
-    },
-    {
-      accessorKey: 'lastName',
-      header: 'Last Name',
-    },
-    {
-      accessorKey: 'address',
-      header: 'Address',
-    },
-    {
-      accessorKey: 'state',
-      header: 'State',
-    },
-    {
-      accessorKey: 'phoneNumber',
-      enableEditing: false,
-      header: 'Phone Number',
-    },
-  ];
-
-  const table = useMantineReactTable({
-    columns,
-    data: withData ? data : [],
-    renderDetailPanel: ({ internalEditComponents, row, table }) => (
-      <Center>
-        <form onSubmit={(e) => e.preventDefault()}>
-          <Group gap="md" pb={24} pt={16}>
-            {internalEditComponents}
-          </Group>
-        </form>
-        <Flex justify="flex-end">
-          <MRT_EditActionButtons row={row} table={table} variant="text" />
-        </Flex>
-      </Center>
-    ),
-    renderEmptyRowsFallback: () => (
-      <Center>
-        <Text>This table is empty, click on the chevron to add a record</Text>
-      </Center>
-    ),
-  });
-
-  return (
-    <Stack>
-      <Switch
-        checked={withData}
-        label="Show data"
-        onChange={(e) => setWithData(e.currentTarget.checked)}
-      />
-      <MantineReactTable table={table} />
     </Stack>
   );
 };

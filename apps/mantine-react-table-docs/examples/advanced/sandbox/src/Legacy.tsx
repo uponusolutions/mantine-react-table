@@ -2,7 +2,10 @@ import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css'; //if using mantine date picker features
 import 'mantine-react-table-open/styles.css'; //make sure MRT styles were imported in your app root (once)
 import { useMemo } from 'react';
-import { MantineReactTable, type MRT_ColumnDef } from 'mantine-react-table-open';
+import {
+  MantineReactTable,
+  type MRT_ColumnDef,
+} from 'mantine-react-table-open';
 import { Box, Button, Menu, Text, Title } from '@mantine/core';
 import { IconUserCircle, IconSend } from '@tabler/icons-react';
 import { data } from './makeData';

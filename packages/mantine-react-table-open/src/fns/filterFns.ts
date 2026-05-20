@@ -136,7 +136,8 @@ const notEquals = <TData extends MRT_RowData>(
   row: Row<TData>,
   id: string,
   filterValue: number | string,
-) => normalizeStringValue(row.getValue(id)) !== normalizeStringValue(filterValue);
+) =>
+  normalizeStringValue(row.getValue(id)) !== normalizeStringValue(filterValue);
 
 notEquals.autoRemove = (val: any) => !val;
 
@@ -207,17 +208,11 @@ const betweenInclusive = <TData extends MRT_RowData>(
     return true;
   }
 
-  if (
-    !isNullishFilterValue(min) &&
-    compareValues(row.getValue(id), min) < 0
-  ) {
+  if (!isNullishFilterValue(min) && compareValues(row.getValue(id), min) < 0) {
     return false;
   }
 
-  if (
-    !isNullishFilterValue(max) &&
-    compareValues(row.getValue(id), max) > 0
-  ) {
+  if (!isNullishFilterValue(max) && compareValues(row.getValue(id), max) > 0) {
     return false;
   }
 

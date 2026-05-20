@@ -55,7 +55,7 @@ export const MRT_TableHeadCellFilterContainer = <TData extends MRT_RowData>({
     columnDef?.columnFilterModeOptions ?? columnFilterModeOptions;
   const isCollapseOpen =
     showColumnFilters || columnFilterDisplayMode === 'popover';
-const collapseRef = useRef<HTMLDivElement | null>(null);
+  const collapseRef = useRef<HTMLDivElement | null>(null);
 
   const showChangeModeButton =
     enableColumnFilterModes &&
