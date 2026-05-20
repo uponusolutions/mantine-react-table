@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions:
+  id-token: write
+
 jobs:
   publish:
     runs-on: ubuntu-latest
@@ -57,8 +60,6 @@ jobs:
           git commit -m "chore(release): publish v${RELEASE_VERSION}" || echo "No changes to commit"
 
       - name: Publish to npm
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: pnpm changeset publish
 
       - name: Push changes and tags
