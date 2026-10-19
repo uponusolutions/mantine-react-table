@@ -19,12 +19,12 @@ for file in *; do
       # Change directory to the sandbox directory
       cd sandbox
 
-      ## Update dependency versions
-      npx npm-check-updates -u
+      ## Update dependency versions (only versions older than 7 days, like minimumReleaseAge in pnpm-workspace.yaml; our own package is excluded)
+      npx npm-check-updates -u --cooldown 7 --reject @uponu-solutions/mantine-react-table
       npx npm-check-updates -u @uponu-solutions/mantine-react-table -t greatest
 
       # Run npm install
-      npm install --package-lock-only --force
+      npm install --package-lock-only --force --min-release-age=7 --min-release-age-exclude=@uponu-solutions/mantine-react-table
 
       echo "  - npm install completed"
       

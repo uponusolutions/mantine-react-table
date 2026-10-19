@@ -8,3 +8,4 @@ allowBuilds:
   sharp: false
   unrs-resolver: false
 preferWorkspacePackages: true
+minimumReleaseAge: 10080
