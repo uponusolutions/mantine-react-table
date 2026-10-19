@@ -184,6 +184,10 @@ export default function App() {
 
 _Open in [Code Sandbox](https://codesandbox.io/s/simple-mantine-react-table-example-t5c3ji)_
 
+### React Compiler
+
+Components that call `useMantineReactTable` can be compiled with the [React Compiler](https://react.dev/learn/react-compiler). The hook returns a new `table` object on every render and never mutates your `columns`, `data` or `initialState`, so don't use `table` itself as an effect or memo dependency; depend on values from `table.getState()` instead. Read the [React Compiler guide](https://www.mantine-react-table.com/docs/guides/react-compiler) for the details and the one pitfall to know about.
+
 ## Contributors
 
 <a href="https://github.com/kevinvandy/mantine-react-table/graphs/contributors">

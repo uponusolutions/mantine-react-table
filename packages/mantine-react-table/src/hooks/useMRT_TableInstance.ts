@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react';
+import { createRef, useMemo, useRef, useState } from 'react';
 
 import { type TableOptions, useTable } from '@tanstack/react-table';
 
@@ -57,17 +57,20 @@ export const useMRT_TableInstance = <TData extends MRT_RowData>(
   definedTableOptions: MRT_DefinedTableOptions<TData>,
 ): MRT_TableInstance<TData> => {
   'use no memo';
-  const lastSelectedRowId = useRef<null | string>(null);
-  const bottomToolbarRef = useRef<HTMLDivElement | null>(null);
-  const editInputRefs = useRef<Record<string, HTMLInputElement>>({});
-  const filterInputRefs = useRef<Record<string, HTMLInputElement>>({});
-  const searchInputRef = useRef<HTMLInputElement | null>(null);
-  const tableContainerRef = useRef<HTMLDivElement | null>(null);
-  const tableHeadCellRefs = useRef<Record<string, HTMLTableCellElement>>({});
-  const tablePaperRef = useRef<HTMLDivElement | null>(null);
-  const topToolbarRef = useRef<HTMLDivElement | null>(null);
-  const tableHeadRef = useRef<HTMLTableSectionElement | null>(null);
-  const tableFooterRef = useRef<HTMLTableSectionElement | null>(null);
+  //one stable refs object for the lifetime of the table, so `table.refs` keeps its identity across renders
+  const [refs] = useState<MRT_TableInstance<TData>['refs']>(() => ({
+    bottomToolbarRef: createRef<HTMLDivElement>(),
+    editInputRefs: { current: {} },
+    filterInputRefs: { current: {} },
+    lastSelectedRowId: { current: null },
+    searchInputRef: createRef<HTMLInputElement>(),
+    tableContainerRef: createRef<HTMLDivElement>(),
+    tableFooterRef: createRef<HTMLTableSectionElement>(),
+    tableHeadCellRefs: { current: {} },
+    tableHeadRef: createRef<HTMLTableSectionElement>(),
+    tablePaperRef: createRef<HTMLDivElement>(),
+    topToolbarRef: createRef<HTMLDivElement>(),
+  }));
 
   //the TanStack features (incl. row models and fn registries) cannot change after mount
   const [features] = useState(() =>
@@ -87,9 +90,9 @@ export const useMRT_TableInstance = <TData extends MRT_RowData>(
     }),
   );
 
-  //transform initial state with proper column order
-  const initialState: Partial<MRT_TableState<TData>> = useMemo(() => {
-    const initState = definedTableOptions.initialState ?? {};
+  //transform initial state with proper column order (computed once, on a copy so the caller's object is never written to)
+  const [initialState] = useState<Partial<MRT_TableState<TData>>>(() => {
+    const initState = { ...definedTableOptions.initialState };
     initState.columnOrder =
       initState.columnOrder ??
       getDefaultColumnOrderIds({
@@ -101,7 +104,7 @@ export const useMRT_TableInstance = <TData extends MRT_RowData>(
       } as MRT_StatefulTableOptions<TData>);
     initState.globalFilterFn = definedTableOptions.globalFilterFn ?? 'fuzzy';
     return initState;
-  }, []);
+  });
 
   definedTableOptions.initialState = initialState;
 
@@ -281,34 +284,18 @@ export const useMRT_TableInstance = <TData extends MRT_RowData>(
     globalFilterFn: statefulTableOptions.filterFns?.[globalFilterFn ?? 'fuzzy'],
   } as unknown as TableOptions<MRT_TableFeatures, TData>);
 
-  //keep one stable MRT table instance across renders (like TanStack v8 did)
-  const tableRef = useRef<MRT_TableInstance<TData> | null>(null);
-  if (!tableRef.current) tableRef.current = {} as MRT_TableInstance<TData>;
-  const table = Object.assign(
-    tableRef.current,
-    reactTable,
-  ) as unknown as MRT_TableInstance<TData>;
+  //a new MRT table object on every render (TanStack's core instance inside stays stable), so that memoized
+  //consumers (React Compiler, memo, useMemo) see a changed `table` whenever anything may have changed
+  const table = { ...reactTable } as unknown as MRT_TableInstance<TData>;
 
-  //TanStack v9 removed `table.getState()`; MRT provides a snapshot of the last render
+  //TanStack v9 removed `table.getState()`; MRT provides a snapshot of this render
   const tableState = {
     ...statefulTableOptions.state,
     ...reactTable.state,
   } as MRT_TableState<TData>;
   table.getState = () => tableState;
 
-  table.refs = {
-    bottomToolbarRef,
-    editInputRefs,
-    filterInputRefs,
-    lastSelectedRowId,
-    searchInputRef,
-    tableContainerRef,
-    tableFooterRef,
-    tableHeadCellRefs,
-    tableHeadRef,
-    tablePaperRef,
-    topToolbarRef,
-  };
+  table.refs = refs;
 
   table.setCreatingRow = (row: MRT_Updater<MRT_Row<TData> | null | true>) => {
     let _row = row;

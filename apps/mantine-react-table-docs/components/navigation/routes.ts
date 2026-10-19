@@ -350,6 +350,10 @@ export const routes: Array<RouteItem> = [
             label: 'Memoization (Performance)',
           },
           {
+            href: '/docs/guides/react-compiler',
+            label: 'React Compiler',
+          },
+          {
             href: '/docs/guides/state-management',
             label: 'State Management',
           },

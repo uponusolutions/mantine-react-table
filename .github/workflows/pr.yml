@@ -28,5 +28,11 @@ jobs:
       - name: Run linters
         run: pnpm run lint
 
+      - name: Run type checks
+        run: pnpm run typecheck
+
+      - name: Run tests
+        run: pnpm run test
+
       - name: Run unit checks
         run: pnpm run build

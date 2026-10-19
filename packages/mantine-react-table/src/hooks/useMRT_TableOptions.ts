@@ -171,6 +171,11 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
     manualSorting = true;
   }
 
+  //TanStack v9 refuses to expand rows that cannot expand, so rows need to be expandable to open a detail panel
+  if (rest.renderDetailPanel && !rest.getRowCanExpand) {
+    rest.getRowCanExpand = () => true;
+  }
+
   return {
     aggregationFns,
     autoResetExpanded,

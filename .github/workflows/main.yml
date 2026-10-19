@@ -29,6 +29,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Type check package
+        run: pnpm --filter @uponu-solutions/mantine-react-table run typecheck
+
+      - name: Test package
+        run: pnpm --filter @uponu-solutions/mantine-react-table run test
+
       - name: Build package
         run: pnpm --filter @uponu-solutions/mantine-react-table run build
 

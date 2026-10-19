@@ -1,3 +1,11 @@
+/*
+ * React Compiler: consumers may compile the components that call `useMantineReactTable`, because the hook returns
+ * a new `table` object on every render and never mutates caller-owned options, columns, data or initialState.
+ * MRT's own hooks and components carry 'use no memo': they read state through TanStack's stateful methods on
+ * stable row/column/cell/header objects and read refs during render, which a compiled component would memoize
+ * into stale output. See the "React Compiler" guide in the docs before removing any of those directives.
+ */
+
 //body components
 export * from './components/body/MRT_TableBody';
 

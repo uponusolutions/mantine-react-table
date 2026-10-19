@@ -57,7 +57,8 @@
     "dist",
     "locales",
     "styles.css",
-    "src"
+    "src",
+    "!src/__test__"
   ],
   "size-limit": [
     {
@@ -85,14 +86,18 @@
     "size": "size-limit",
     "storybook": "pnpm storybook:dev",
     "storybook:build": "storybook build",
-    "storybook:dev": "storybook dev -p 6007"
+    "storybook:dev": "storybook dev -p 6007",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.7",
     "@eslint/js": "^10.0.0",
     "@faker-js/faker": "^10.6.0",
     "@mantine/core": "9.7.2",
     "@mantine/dates": "9.7.2",
     "@mantine/hooks": "9.7.2",
+    "@rolldown/plugin-babel": "^0.2.4",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-typescript": "^12.3.0",
     "@size-limit/preset-small-lib": "^14.2.0",
@@ -102,14 +107,21 @@
     "@storybook/react": "^10.6.1",
     "@storybook/react-vite": "^10.6.1",
     "@tabler/icons-react": "3.49.0",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
     "@types/node": "^26.6.5",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
+    "babel-plugin-react-compiler": "1.0.0",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.23",
     "eslint": "^10.12.0",
     "eslint-plugin-perfectionist": "^5.12.1",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "happy-dom": "^21.0.1",
     "mantine-contextmenu": "^9.4.0",
     "postcss": "^8.5.29",
     "postcss-preset-mantine": "^1.18.0",
@@ -131,7 +143,8 @@
     "typescript": "~6.0.3",
     "typescript-eslint": "^8.71.1",
     "typescript-plugin-css-modules": "^5.2.0",
-    "vite": "^8.3.4"
+    "vite": "^8.3.4",
+    "vitest": "^5.0.4"
   },
   "dependencies": {
     "@tanstack/match-sorter-utils": "9.2.6",

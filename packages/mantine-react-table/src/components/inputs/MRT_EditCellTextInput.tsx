@@ -83,6 +83,7 @@ export const MRT_EditCellTextInput = <TData extends MRT_RowData>({
     ...rest,
   };
 
+  //intentional interior mutation of TanStack's row cache, only ever called from event handlers (never during render)
   const saveInputValueToRowCache = (newValue: null | string) => {
     //@ts-ignore
     row._valuesCache[column.id] = newValue;

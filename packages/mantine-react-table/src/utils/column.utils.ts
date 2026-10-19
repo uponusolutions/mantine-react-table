@@ -69,7 +69,9 @@ export const prepareColumns = <TData extends MRT_RowData>({
     sortFns = {},
     state: { columnFilterFns = {} } = {},
   } = tableOptions;
-  return columnDefs.map((columnDef) => {
+  //never write into the caller's column defs: work on a shallow copy of each one
+  return columnDefs.map((callerColumnDef) => {
+    let columnDef = { ...callerColumnDef };
     //assign columnId
     if (!columnDef.id) columnDef.id = getColumnId(columnDef);
     //assign columnDefType

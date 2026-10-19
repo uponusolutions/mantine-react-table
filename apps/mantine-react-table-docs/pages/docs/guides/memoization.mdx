@@ -149,7 +149,7 @@ const table = useMantineReactTable({
   columns,
   data,
   //memoize all cells. This value can be applied dynamically based on a certain scenario/condition if needed
-  memoMode: 'cell', // 'cell' | 'row' | 'table-body'
+  memoMode: 'cells', // 'cells' | 'rows' | 'table-body'
 });
 ```
 
@@ -157,8 +157,8 @@ Usually you should not ever need to do this, and be aware that this will stop ce
 
 > Don't use `memoMode` unless you know what you're doing and have a specific use case for it.
 
-### React Forget
+### React Compiler
 
-In the future, React may finally release their magical "React Forget" compiler that will make all memoization problems in React disappear, and you won't have to worry about any of this. But until then, the above solutions are the best we have.
+If your app is compiled with the [React Compiler](https://react.dev/learn/react-compiler), most manual memoization in your own components becomes unnecessary. Mantine React Table supports compiled consumers; see the [React Compiler Guide](/docs/guides/react-compiler) for the `table` contract and the one pitfall to know about. Giving `data` a stable reference still matters, since the compiler does not memoize values that you create outside of compiled components (for example, data fetched in a non-React module).
 
 View Extra Storybook [Examples](https://www.mantine-react-table.dev/?path=/story/features-memo-mode-examples)

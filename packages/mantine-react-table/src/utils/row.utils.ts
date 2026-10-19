@@ -40,8 +40,10 @@ export const getMRT_Rows = <TData extends MRT_RowData>(
           : getRowModel().rows
         : getCenterRows();
   } else {
-    // fuzzy ranking adjustments
-    rows = getPrePaginatedRowModel().rows.sort((a, b) => rankGlobalFuzzy(a, b));
+    // fuzzy ranking adjustments (on a copy, TanStack's memoized row model must not be sorted in place)
+    rows = [...getPrePaginatedRowModel().rows].sort((a, b) =>
+      rankGlobalFuzzy(a, b),
+    );
     if (enablePagination && !manualPagination && !all) {
       const start = pagination.pageIndex * pagination.pageSize;
       rows = rows.slice(start, start + pagination.pageSize);

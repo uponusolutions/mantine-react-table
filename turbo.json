@@ -68,6 +68,12 @@
     },
     "storybook:dev": {
       "cache": false
+    },
+    "test": {
+      "outputs": []
+    },
+    "typecheck": {
+      "outputs": []
     }
   }
 }

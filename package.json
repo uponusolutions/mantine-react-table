@@ -25,6 +25,8 @@
     "storybook": "turbo run storybook",
     "storybook:build": "turbo run storybook:build",
     "storybook:dev": "turbo run storybook",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
     "release": "pnpm changeset version && pnpm install --frozen-lockfile && pnpm changeset publish"
   },
   "devDependencies": {

@@ -1,0 +1,112 @@
+import Head from 'next/head';
+
+<Head>
+  <title>{'React Compiler Guide - Mantine React Table Open Docs'}</title>
+  <meta
+    name="description"
+    content="How to use Mantine React Table in an app that is compiled with the React Compiler."
+  />
+</Head>
+
+## React Compiler Guide
+
+Mantine React Table works in apps that compile their components with the [React Compiler](https://react.dev/learn/react-compiler). You can compile the components that call `useMantineReactTable` and render `<MantineReactTable />` (or any `MRT_*` component) without opting them out.
+
+### Recommended Setup
+
+Install `babel-plugin-react-compiler` and enable it in your bundler. With Vite and `@vitejs/plugin-react` v6:
+
+```ts
+// vite.config.ts
+import babel from '@rolldown/plugin-babel';
+import react, { reactCompilerPreset } from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
+
+export default defineConfig({
+  plugins: [
+    react(),
+    babel({ presets: [reactCompilerPreset({ compilationMode: 'infer' })] }),
+  ],
+});
+```
+
+Your compiler setup does not process `node_modules`, so Mantine React Table's own components are never compiled by it. That is intended (see [below](#why-mrts-own-components-are-not-compiled)).
+
+### The `table` Contract
+
+The compiler caches values and JSX based on the identity of their inputs. Mantine React Table gives `table` the identity semantics the compiler expects:
+
+- **`useMantineReactTable` returns a new `table` object on every render** of the component that calls it. A compiled `<MantineReactTable table={table} />` therefore re-renders whenever table state changes.
+- **`table.getState()` and `table.options` are snapshots of that render.** A `table` from an earlier render keeps describing that earlier render.
+- **`table.refs` is a stable object**, and its ref objects (`tableContainerRef`, `tablePaperRef`, ...) keep their identity for the lifetime of the table.
+- **Plain state setters are stable** (`table.setDensity`, `table.setIsFullScreen`, `table.setShowColumnFilters`, ...). Setters that you replaced with an `onXChange` table option are whatever function you passed, and `table.setCreatingRow` is created per render. Don't rely on their identity.
+- **Your objects are never mutated.** `columns`, `data` and `initialState` (including deeply frozen ones, or constants shared between tables) are read, never written to.
+
+#### Don't use `table` as a dependency
+
+Because `table` changes on every render, do not put it in the dependency array of `useEffect`, `useMemo` or `useCallback`. Depend on the specific state you need instead:
+
+```tsx
+const table = useMantineReactTable({ columns, data });
+const { sorting } = table.getState();
+
+//❌ runs after every render
+useEffect(() => {
+  fetchData(table.getState().sorting);
+}, [table]);
+
+//✅ runs when sorting changes
+useEffect(() => {
+  fetchData(sorting);
+}, [sorting]);
+```
+
+A long-lived listener (for example a `window` event listener registered once) that captured `table` in render N reads render N's `getState()`. If such a listener needs the latest state, keep that state in your own `useState`/`useRef`, or control it with the `state` and `onXChange` table options.
+
+### Pitfall: TanStack Methods on Rows, Columns and Cells
+
+The `row`, `column`, `cell` and `header` objects you receive in render props (`Cell`, `renderDetailPanel`, `renderRowActions`, ...) are TanStack's core objects. They keep their identity across renders, while their state methods (`row.getIsExpanded()`, `row.getIsSelected()`, `column.getIsPinned()`, `column.getIsSorted()`, ...) return live values.
+
+Calling such a method directly in the body of a compiled component is fine: the compiler re-runs the call on every render. It goes stale when the call ends up inside something the compiler caches on the stable object only, such as a render helper that returns JSX, or an array derived from the call:
+
+```tsx
+//❌ the compiler caches `renderLabel` and the JSX around its result on `row`, which never changes
+const RowLabel = ({ row }: { row: MRT_Row<Person> }) => {
+  const renderLabel = () => <b>{row.getIsExpanded() ? 'open' : 'closed'}</b>;
+  return <span>{renderLabel()}</span>;
+};
+
+//✅ pass the value down as a prop; MRT calls `Cell` on every render of the cell, so the read is fresh
+const RowLabel = ({ expanded }: { expanded: boolean }) => (
+  <span>{expanded ? 'open' : 'closed'}</span>
+);
+
+const columns: MRT_ColumnDef<Person>[] = [
+  {
+    id: 'label',
+    header: 'Label',
+    Cell: ({ row }) => <RowLabel expanded={row.getIsExpanded()} />,
+  },
+];
+```
+
+This is a property of TanStack Table's objects, not something Mantine React Table can change. When in doubt, pass the value as a prop (read in the render prop MRT calls, or from `table.getState()`), or opt the component out with `'use no memo'`.
+
+### Opting a Component Out
+
+To exclude a single component or hook from compilation, add the `'use no memo'` directive at the top of its body:
+
+```tsx
+const LegacyToolbar = ({ table }: { table: MRT_TableInstance<Person> }) => {
+  'use no memo';
+  //...
+};
+```
+
+### Why MRT's Own Components Are Not Compiled
+
+Mantine React Table's internal hooks and components carry `'use no memo'`. They read state through the TanStack methods described above and read DOM refs (element heights for sticky offsets, virtualization measurements) during render, both of which a compiled component would turn into stale output. Your compiler skips `node_modules` anyway, so this only matters for contributors: those directives stay until the internals are refactored to read state from the per-render snapshot.
+
+### `memoMode`
+
+`memoMode: 'cells' | 'rows' | 'table-body'` keeps working the same with the compiler. A memoized table body re-renders when `data` changes and stays frozen otherwise. See the [Memoization Guide](/docs/guides/memoization#memo-mode).

@@ -58,6 +58,7 @@ export const MRT_EditRowModal = <TData extends MRT_RowData>({
       onEditingRowCancel?.({ row, table });
       setEditingRow(null);
     }
+    //intentional interior mutation of TanStack's row cache, only ever in an event handler (never during render)
     row._valuesCache = {} as any; //reset values cache
     modalProps.onClose?.();
   };
