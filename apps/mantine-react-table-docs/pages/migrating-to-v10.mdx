@@ -1,0 +1,130 @@
+import Head from 'next/head';
+
+<Head>
+  <title>Migrating to v10 - Mantine React Table Open Docs</title>
+  <meta
+    name="description"
+    content="How to migrate Mantine React Table from v9 (TanStack Table v8) to v10 (TanStack Table v9)"
+  />
+</Head>
+
+## Migrating to v10
+
+Mantine React Table v10 is built on **TanStack Table v9** (`@tanstack/react-table` 9.3.1 and `@tanstack/match-sorter-utils` 9.2.6). The public MRT API stays as close as possible to v9, so most tables only need a few renames. This guide lists everything that changed.
+
+### Requirements
+
+- TanStack Table v9 packages are **ESM-only**. The CommonJS build of Mantine React Table therefore needs **Node.js 20.19+** (`require(esm)`) or a bundler. The `engines.node` field of the package is now `>=20.19.0`.
+- The peer dependencies (Mantine V9, React 19.2+) did not change.
+
+### Column Pinning
+
+Column pinning is logical now:
+
+- The `columnPinning` state is `{ start, end }` instead of `{ left, right }`.
+- `column.pin('start' | 'end' | false)`, and `column.getIsPinned()` returns `'start' | 'end' | false`.
+- `table.getLeft*()` / `table.getRight*()` and `row.getLeftVisibleCells()` / `row.getRightVisibleCells()` are now `getStart*` / `getEnd*` (for example `getStartLeafColumns`, `getEndVisibleLeafColumns`, `getStartVisibleCells`).
+- Pinned cells are positioned with `inset-inline-start` / `inset-inline-end`, so pinned columns stick to the correct edge in right-to-left tables. The "Pin to left" and "Pin to right" labels and buttons are unchanged and are mapped to `start` / `end` depending on the text direction.
+- The column-level option is `enablePinning` (the table option is still `enableColumnPinning`).
+
+```diff
+-initialState: { columnPinning: { left: ['email'], right: ['mrt-row-actions'] } },
++initialState: { columnPinning: { start: ['email'], end: ['mrt-row-actions'] } },
+```
+
+The DOM and CSS hooks that MRT uses for pinned cells were renamed too:
+
+| v9                                      | v10                                    |
+| --------------------------------------- | -------------------------------------- |
+| `data-column-pinned="left"` / `"right"` | `data-column-pinned="start"` / `"end"` |
+| `data-last-left-pinned`                 | `data-last-start-pinned`               |
+| `data-first-right-pinned`               | `data-first-end-pinned`                |
+| `--mrt-table-cell-left`                 | `--mrt-table-cell-start`               |
+| `--mrt-table-cell-right`                | `--mrt-table-cell-end`                 |
+
+### Column Resizing
+
+| v9                          | v10                                                                         |
+| --------------------------- | --------------------------------------------------------------------------- |
+| `columnSizingInfo` state    | `columnResizing`                                                            |
+| `onColumnSizingInfoChange`  | `onColumnResizingChange`                                                    |
+| `table.setColumnSizingInfo` | `table.setColumnResizing`                                                   |
+| `MRT_ColumnSizingInfoState` | `MRT_ColumnResizingState` (the old type name is kept as a deprecated alias) |
+
+### Sorting
+
+| v9                                                     | v10                                                                                          |
+| ------------------------------------------------------ | -------------------------------------------------------------------------------------------- |
+| column option `sortingFn`                              | `sortFn`                                                                                     |
+| table option `sortingFns`                              | `sortFns` (read once on mount)                                                               |
+| `MRT_SortingFns`, `MRT_SortingFn`, `MRT_SortingOption` | `MRT_SortFns`, `MRT_SortFn`, `MRT_SortOption` (the old names are kept as deprecated aliases) |
+| `column.getSortingFn()`, `column.getAutoSortingFn()`   | `column.getSortFn()`, `column.getAutoSortFn()`                                               |
+
+### Row Models
+
+The `get*RowModel` table options were removed. MRT registers all row models for you. If you want to override one (for example, to provide server-side faceted values), use the new options. They are **read once on mount**:
+
+| Removed                  | New                   |
+| ------------------------ | --------------------- |
+| `getCoreRowModel`        | `coreRowModel`        |
+| `getFilteredRowModel`    | `filteredRowModel`    |
+| `getSortedRowModel`      | `sortedRowModel`      |
+| `getPaginationRowModel`  | `paginatedRowModel`   |
+| `getExpandedRowModel`    | `expandedRowModel`    |
+| `getGroupedRowModel`     | `groupedRowModel`     |
+| `getFacetedRowModel`     | `facetedRowModel`     |
+| `getFacetedMinMaxValues` | `facetedMinMaxValues` |
+| `getFacetedUniqueValues` | `facetedUniqueValues` |
+
+```tsx
+const table = useMantineReactTable({
+  columns,
+  data,
+  enableFacetedValues: true,
+  //the TanStack Table v9 signature: (table, columnId) => () => value
+  facetedUniqueValues: (table, columnId) => () => new Map<string, number>(),
+  facetedMinMaxValues: (table, columnId) => () => [0, 100],
+});
+```
+
+The `aggregationFns`, `filterFns` and `sortFns` table options are also read once on mount.
+
+The table instance methods were renamed as well: `table.getPaginationRowModel()` is `table.getPaginatedRowModel()` and `table.getPrePaginationRowModel()` is `table.getPrePaginatedRowModel()`.
+
+> `enablePagination: false` now always forces `manualPagination: true`.
+>
+> The grouped and expanded row models are always registered now. If you pass `grouping` or `expanded` state while `enableGrouping` / `enableExpanding` are `false`, TanStack Table will now group or expand the rows.
+
+### Aggregation
+
+- Aggregation functions are definition objects `{ aggregate(context), merge?(context) }` (`MRT_AggregationFnDef`). The `MRT_AggregationFns.*` built-ins are definition objects and are **no longer callable**.
+- The v8-style callback `(columnId, leafRows, childRows) => any` still works, but is deprecated.
+- An array of aggregation functions still returns a **positional array** (not the keyed object that TanStack Table v9 returns).
+- The built-in `count` now counts all data rows in nested groups, not just the direct child groups. New built-ins: `first` and `last`.
+
+```tsx
+{
+  accessorKey: 'points',
+  header: 'Points',
+  aggregationFn: {
+    aggregate: ({ rows, getValue }) => rows.reduce((sum, row) => sum + getValue(row), 0),
+  },
+}
+```
+
+### Row Selection
+
+- `MRT_RowSelectionState` is `Record<string, true>`. Selected rows have the value `true`, and unselected rows are removed from the state instead of being set to `false`.
+- `table.getIsSomeRowsSelected()` and `table.getIsSomePageRowsSelected()` are `true` whenever **at least one** row is selected (also if all rows are selected).
+- TanStack Table's Shift range selection in `row.getToggleSelectedHandler()` is turned off by default in MRT (`enableRowRangeSelection: false`). MRT's own `enableBatchRowSelection` is unchanged.
+
+### Table Instance, Rows, Columns and Cells
+
+- Row, column, cell and header methods live on prototypes. Do not spread (`{ ...row }`), destructure (`const { getValue } = row`) or serialize them.
+- `row.table`, `column.table`, `cell.getContext().table` and `header.getContext().table` are the TanStack table, not the MRT instance. Use the `table` that MRT passes to your callbacks and render props.
+  For example, when you render MRT `Header` / `Cell` render functions yourself with `flexRender`, pass the MRT table: `flexRender(columnDef.Header ?? columnDef.header, { ...header.getContext(), table })`.
+- `table.getState()` is **still provided by MRT** (TanStack Table v9 removed it). TanStack's `onStateChange`, `setState`, the table-level `enablePinning` option and all `_`-prefixed APIs are gone.
+
+### TypeScript
+
+TanStack types take a features generic as their first type parameter (`Row<TFeatures, TData>`, `Column<TFeatures, TData, TValue>`, ...). The MRT types (`MRT_Row`, `MRT_Column`, ...) are unchanged. If you need to use TanStack types together with MRT, use the new `MRT_TableFeatures` type as the first generic. Global `ColumnMeta` / `TableMeta` module augmentations now take `TFeatures` as their first type parameter.

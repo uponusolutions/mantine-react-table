@@ -33,7 +33,7 @@ export const MRT_ToolbarAlertBanner = <TData extends MRT_RowData>({
   'use no memo';
   const {
     getFilteredSelectedRowModel,
-    getPrePaginationRowModel,
+    getPrePaginatedRowModel,
     getState,
     options: {
       enableRowSelection,
@@ -61,7 +61,7 @@ export const MRT_ToolbarAlertBanner = <TData extends MRT_RowData>({
     { table },
   );
 
-  const totalRowCount = rowCount ?? getPrePaginationRowModel().flatRows.length;
+  const totalRowCount = rowCount ?? getPrePaginatedRowModel().flatRows.length;
 
   const selectedRowCount = useMemo(
     () =>

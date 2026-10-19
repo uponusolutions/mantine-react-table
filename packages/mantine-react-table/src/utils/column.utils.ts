@@ -1,12 +1,13 @@
-import { type Row } from '@tanstack/react-table';
-
 import {
+  type MRT_AggregationFnDef,
   type MRT_Column,
   type MRT_ColumnDef,
   type MRT_ColumnOrderState,
   type MRT_DefinedColumnDef,
   type MRT_DefinedTableOptions,
   type MRT_FilterOption,
+  type MRT_LegacyAggregationFn,
+  type MRT_Row,
   type MRT_RowData,
 } from '../types';
 
@@ -32,6 +33,28 @@ export const getAllLeafColumnDefs = <TData extends MRT_RowData>(
   return allLeafColumnDefs;
 };
 
+export const toMRT_AggregationFnDef = <TData extends MRT_RowData>(
+  fn: MRT_AggregationFnDef<TData> | MRT_LegacyAggregationFn<TData>,
+): MRT_AggregationFnDef<TData> =>
+  typeof fn === 'function'
+    ? {
+        aggregate: (ctx) =>
+          fn(
+            ctx.columnId,
+            ctx.rows as unknown as MRT_Row<TData>[],
+            (ctx.subRows ?? ctx.rows) as unknown as MRT_Row<TData>[],
+          ),
+      }
+    : fn;
+
+/**
+ * Maps a visual side to the logical TanStack pin position, respecting text direction.
+ */
+export const getMRT_PinPosition = (
+  side: 'left' | 'right',
+  dir: 'ltr' | 'rtl' = 'ltr',
+): 'end' | 'start' => ((side === 'left') !== (dir === 'rtl') ? 'start' : 'end');
+
 export const prepareColumns = <TData extends MRT_RowData>({
   columnDefs,
   tableOptions,
@@ -43,7 +66,7 @@ export const prepareColumns = <TData extends MRT_RowData>({
     aggregationFns = {},
     defaultDisplayColumn,
     filterFns = {},
-    sortingFns = {},
+    sortFns = {},
     state: { columnFilterFns = {} } = {},
   } = tableOptions;
   return columnDefs.map((columnDef) => {
@@ -61,15 +84,18 @@ export const prepareColumns = <TData extends MRT_RowData>({
     } else if (columnDef.columnDefType === 'data') {
       //assign aggregationFns if multiple aggregationFns are provided
       if (Array.isArray(columnDef.aggregationFn)) {
-        const aggFns = columnDef.aggregationFn as string[];
-        columnDef.aggregationFn = (
-          columnId: string,
-          leafRows: Row<TData>[],
-          childRows: Row<TData>[],
-        ) =>
-          aggFns.map((fn) =>
-            aggregationFns[fn]?.(columnId, leafRows, childRows),
-          );
+        const defs = (columnDef.aggregationFn as any[]).map((fn) =>
+          typeof fn === 'string'
+            ? aggregationFns[fn]
+            : toMRT_AggregationFnDef(fn),
+        );
+        columnDef.aggregationFn = {
+          aggregate: (ctx: any) => defs.map((def) => def?.aggregate(ctx)),
+        } as MRT_AggregationFnDef<TData>;
+      } else if (typeof columnDef.aggregationFn === 'function') {
+        columnDef.aggregationFn = toMRT_AggregationFnDef(
+          columnDef.aggregationFn,
+        );
       }
 
       //assign filterFns
@@ -80,10 +106,9 @@ export const prepareColumns = <TData extends MRT_RowData>({
           columnFilterFns[columnDef.id];
       }
 
-      //assign sortingFns
-      if (Object.keys(sortingFns).includes(columnDef.sortingFn as string)) {
-        // @ts-ignore
-        columnDef.sortingFn = sortingFns[columnDef.sortingFn];
+      //assign sortFns
+      if (Object.keys(sortFns).includes(columnDef.sortFn as string)) {
+        columnDef.sortFn = sortFns[columnDef.sortFn as string] as any;
       }
     } else if (columnDef.columnDefType === 'display') {
       columnDef = {

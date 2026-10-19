@@ -138,6 +138,8 @@ return (
 );
 ```
 
+> TanStack Table v9 removed `table.getState()`, but MRT still provides it: it returns a snapshot of the table state from the last render. TanStack Table's `table.store` and `table.atoms` are available as well. The column resizing state was renamed from `columnSizingInfo` to `columnResizing` (`onColumnResizingChange`, `table.setColumnResizing`).
+
 The table instance is the same object that you will also see as a provided parameter in many of the other callback functions throughout Mantine React Table, such as all the `render...` props or the `Cell` or `Header` render overrides in the column definition options.
 
 ```jsx

@@ -19,8 +19,8 @@ export const useMRT_ColumnVirtualizer = <
 ): MRT_ColumnVirtualizer | undefined => {
   'use no memo';
   const {
-    getLeftLeafColumns,
-    getRightLeafColumns,
+    getStartLeafColumns,
+    getEndLeafColumns,
     getState,
     getVisibleLeafColumns,
     options: {
@@ -48,8 +48,8 @@ export const useMRT_ColumnVirtualizer = <
     () =>
       enableColumnPinning
         ? [
-            getLeftLeafColumns().map((c) => c.getPinnedIndex()),
-            getRightLeafColumns()
+            getStartLeafColumns().map((c) => c.getPinnedIndex()),
+            getEndLeafColumns()
               .map(
                 (column) => visibleColumns.length - column.getPinnedIndex() - 1,
               )

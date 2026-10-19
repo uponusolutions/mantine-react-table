@@ -10,6 +10,8 @@ export const MiniNav = () => {
   const { colorScheme } = useMantineColorScheme();
 
   useEffect(() => {
+    // sync with the DOM headings of the newly rendered page
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setHeadings(
       document.querySelectorAll(isXLDesktop ? 'h2, h3, h4, h5' : 'h3'),
     );

@@ -67,14 +67,14 @@ export const MRT_TableFooterCell = <TData extends MRT_RowData>({
     <TableTh
       colSpan={footer.colSpan}
       data-column-pinned={isColumnPinned || undefined}
-      data-first-right-pinned={
-        (isColumnPinned === 'right' &&
-          column.getIsFirstColumn(isColumnPinned)) ||
+      data-first-end-pinned={
+        (isColumnPinned === 'end' && column.getIsFirstColumn(isColumnPinned)) ||
         undefined
       }
       data-index={renderedColumnIndex}
-      data-last-left-pinned={
-        (isColumnPinned === 'left' && column.getIsLastColumn(isColumnPinned)) ||
+      data-last-start-pinned={
+        (isColumnPinned === 'start' &&
+          column.getIsLastColumn(isColumnPinned)) ||
         undefined
       }
       {...tableCellProps}
@@ -86,14 +86,12 @@ export const MRT_TableFooterCell = <TData extends MRT_RowData>({
             : direction.dir === 'rtl'
               ? 'right'
               : 'left'),
-        '--mrt-table-cell-left':
-          isColumnPinned === 'left'
-            ? `${column.getStart(isColumnPinned)}`
+        '--mrt-table-cell-start':
+          isColumnPinned === 'start'
+            ? `${column.getStart('start')}`
             : undefined,
-        '--mrt-table-cell-right':
-          isColumnPinned === 'right'
-            ? `${column.getAfter(isColumnPinned)}`
-            : undefined,
+        '--mrt-table-cell-end':
+          isColumnPinned === 'end' ? `${column.getAfter('end')}` : undefined,
         ...tableCellProps?.__vars,
       }}
       className={clsx(

@@ -7,6 +7,19 @@ const nextConfig = {
     locales: ['en'],
     defaultLocale: 'en',
   },
+  // proxies the (legacy, domain based) Plausible script and API, see pages/_app.tsx
+  async rewrites() {
+    return [
+      {
+        source: '/proxy/js/script.js',
+        destination: 'https://plausible.io/js/script.js',
+      },
+      {
+        source: '/proxy/api/event',
+        destination: 'https://plausible.io/api/event',
+      },
+    ];
+  },
   async redirects() {
     return [
       {
@@ -110,10 +123,8 @@ const withMDX = require('@next/mdx')({
   },
 });
 
-const { withPlausibleProxy } = require('next-plausible');
-
 module.exports = {
-  ...withPlausibleProxy()({ ...nextConfig }),
+  ...nextConfig,
   ...withMDX({
     pageExtensions: ['js', 'ts', 'tsx', 'jsx', 'md', 'mdx'],
   }),

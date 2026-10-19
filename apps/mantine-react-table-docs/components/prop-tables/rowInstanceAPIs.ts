@@ -73,6 +73,13 @@ export const rowInstanceAPIs: RowInstanceAPI[] = [
     linkText: '',
   },
   {
+    rowInstanceAPI: 'getEndVisibleCells',
+    type: '',
+    description: '',
+    link: '',
+    linkText: '',
+  },
+  {
     rowInstanceAPI: 'getIsAllSubRowsSelected',
     type: '',
     description: '',
@@ -115,13 +122,6 @@ export const rowInstanceAPIs: RowInstanceAPI[] = [
     linkText: '',
   },
   {
-    rowInstanceAPI: 'getLeftVisibleCells',
-    type: '',
-    description: '',
-    link: '',
-    linkText: '',
-  },
-  {
     rowInstanceAPI: 'getParentRow',
     type: '',
     description: '',
@@ -136,7 +136,7 @@ export const rowInstanceAPIs: RowInstanceAPI[] = [
     linkText: '',
   },
   {
-    rowInstanceAPI: 'getRightVisibleCells',
+    rowInstanceAPI: 'getStartVisibleCells',
     type: '',
     description: '',
     link: '',

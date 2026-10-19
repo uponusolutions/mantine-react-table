@@ -49,7 +49,9 @@ It is best to refer to the [Mantine V8 installation guide](https://mantine.dev/g
 
 > You do NOT need to install `@tanstack/react-table`, as it is already an internal dependency of `mantine-react-table`, and must use an exact version already specified internally.
 >
-> All internal dependencies: `@tanstack/react-table`, `@tanstack/react-virtual`, and `@tanstack/match-sorter-utils`
+> All internal dependencies: `@tanstack/react-table` (TanStack Table v9), `@tanstack/react-virtual`, and `@tanstack/match-sorter-utils`
+>
+> TanStack Table v9 is ESM-only. The CommonJS build of Mantine React Table therefore needs Node.js 20.19+ (`require(esm)`) or a bundler (webpack, Vite, Next.js, ...).
 
 #### Install PostCSS dev dependencies (Optional)
 
@@ -86,9 +88,7 @@ The [Mantine V8 installation guide](https://mantine.dev/getting-started/) has mu
 ```tsx
 import { MantineProvider, createTheme } from '@mantine/core';
 
-const theme = createTheme({
-  /** Put your mantine theme override here */
-});
+const theme = createTheme({/** Put your mantine theme override here */});
 
 function Demo() {
   return (
@@ -176,7 +176,7 @@ Then try upgrading either `webpack` or `react-scripts` to the latest versions.
         name: "Should I install '@tanstack/react-table' in my package.json for Mantine React Table?",
         acceptedAnswer: {
           '@type': 'Answer',
-          text: "<p><b>No</b>, you do not need to install TanStack Table in your project manually, as the latest TanStack Table version automatically gets installed under the hood by MRT itself as an internal dependency. You can import s and functions from '@tanstack/react-table' too.</p>",
+          text: "<p><b>No</b>, you do not need to install TanStack Table in your project manually, as the latest TanStack Table version automatically gets installed under the hood by MRT itself as an internal dependency. You can import types and functions from '@tanstack/react-table' too. MRT v10 uses TanStack Table v9, which is ESM-only: the CommonJS build of MRT needs Node 20.19+ or a bundler.</p>",
         },
       },
       {

@@ -24,7 +24,7 @@ Column pinning is a cool feature that lets users pin (freeze) columns to the lef
 
 ### Relevant Column Options
 
-<ColumnOptionsTable onlyOptions={new Set(['enableColumnPinning'])} />
+<ColumnOptionsTable onlyOptions={new Set(['enablePinning'])} />
 
 ### Relevant State
 
@@ -46,6 +46,8 @@ const table = useMantineReactTable({
 
 Columns can start out pinned in your table by setting the `columnPinning` states in either `initialState` or `state`.
 
+> Since TanStack Table v9, column pinning is logical: the `columnPinning` state is `{ start, end }` (it was `{ left, right }`) and `column.pin()` accepts `'start' | 'end' | false`. Pinned columns are positioned with `inset-inline-start` / `inset-inline-end`, so in right-to-left tables the `start` columns stick to the right edge. The "Pin to left" and "Pin to right" buttons keep their visual meaning and map to `start`/`end` depending on the text direction.
+
 ```jsx
 const table = useMantineReactTable({
   data,
@@ -53,8 +55,8 @@ const table = useMantineReactTable({
   enableColumnPinning: true,
   initialState: {
     columnPinning: {
-      left: ['email'], //pin email column to left by default
-      right: ['mrt-row-actions'], //pin built-in row actions display column to right by default
+      start: ['email'], //pin email column to the start (left in LTR) by default
+      end: ['mrt-row-actions'], //pin built-in row actions display column to the end (right in LTR) by default
     },
   },
 });

@@ -21,7 +21,7 @@ for file in *; do
 
       ## Update dependency versions
       npx npm-check-updates -u
-      npx npm-check-updates -u mantine-react-table -t greatest
+      npx npm-check-updates -u @uponu-solutions/mantine-react-table -t greatest
 
       # Run npm install
       npm install --package-lock-only --force

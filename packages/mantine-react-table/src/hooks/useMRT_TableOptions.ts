@@ -1,22 +1,10 @@
 import { useMemo } from 'react';
 
-import {
-  getCoreRowModel,
-  getExpandedRowModel,
-  getFacetedMinMaxValues,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getGroupedRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-} from '@tanstack/react-table';
-
 import { useDirection } from '@mantine/core';
 
 import { MRT_AggregationFns } from '../fns/aggregationFns';
 import { MRT_FilterFns } from '../fns/filterFns';
-import { MRT_SortingFns } from '../fns/sortingFns';
+import { MRT_SortFns } from '../fns/sortFns';
 import { MRT_Default_Icons } from '../icons';
 import { MRT_Localization_EN } from '../locales/en';
 import {
@@ -24,6 +12,7 @@ import {
   type MRT_RowData,
   type MRT_TableOptions,
 } from '../types';
+import { toMRT_AggregationFnDef } from '../utils/column.utils';
 
 export const MRT_DefaultColumn = {
   filterVariant: 'text',
@@ -83,6 +72,7 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
   enableMultiSort = true,
   enablePagination = true,
   enableRowPinning = false,
+  enableRowRangeSelection = false,
   enableRowSelection = false,
   enableRowVirtualization,
   enableSelectAll = true,
@@ -111,7 +101,7 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
   rowNumberDisplayMode = 'static',
   rowPinningDisplayMode = 'sticky',
   selectAllMode = 'page',
-  sortingFns,
+  sortFns,
   ...rest
 }: MRT_TableOptions<TData>) => {
   'use no memo';
@@ -126,11 +116,16 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
     [localization],
   );
   aggregationFns = useMemo(
-    () => ({ ...MRT_AggregationFns, ...aggregationFns }),
+    () =>
+      Object.fromEntries(
+        Object.entries({ ...MRT_AggregationFns, ...aggregationFns }).map(
+          ([key, fn]) => [key, toMRT_AggregationFnDef(fn as any)],
+        ),
+      ),
     [],
   );
   filterFns = useMemo(() => ({ ...MRT_FilterFns, ...filterFns }), []);
-  sortingFns = useMemo(() => ({ ...MRT_SortingFns, ...sortingFns }), []);
+  sortFns = useMemo(() => ({ ...MRT_SortFns, ...sortFns }), []);
   defaultColumn = useMemo(
     () => ({ ...MRT_DefaultColumn, ...defaultColumn }),
     [defaultColumn],
@@ -165,7 +160,7 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
     enableStickyHeader = true;
   }
 
-  if (enablePagination === false && manualPagination === undefined) {
+  if (enablePagination === false) {
     manualPagination = true;
   }
 
@@ -210,6 +205,7 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
     enableMultiSort,
     enablePagination,
     enableRowPinning,
+    enableRowRangeSelection,
     enableRowSelection,
     enableRowVirtualization,
     enableSelectAll,
@@ -220,25 +216,6 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
     enableToolbarInternalActions,
     enableTopToolbar,
     filterFns,
-    getCoreRowModel: getCoreRowModel(),
-    getExpandedRowModel:
-      enableExpanding || enableGrouping ? getExpandedRowModel() : undefined,
-    getFacetedMinMaxValues: enableFacetedValues
-      ? getFacetedMinMaxValues()
-      : undefined,
-    getFacetedRowModel: enableFacetedValues ? getFacetedRowModel() : undefined,
-    getFacetedUniqueValues: enableFacetedValues
-      ? getFacetedUniqueValues()
-      : undefined,
-    getFilteredRowModel:
-      enableColumnFilters || enableGlobalFilter || enableFilters
-        ? getFilteredRowModel()
-        : undefined,
-    getGroupedRowModel: enableGrouping ? getGroupedRowModel() : undefined,
-    getPaginationRowModel: enablePagination
-      ? getPaginationRowModel()
-      : undefined,
-    getSortedRowModel: enableSorting ? getSortedRowModel() : undefined,
     getSubRows: (row) => row?.subRows,
     icons,
     layoutMode,
@@ -258,7 +235,7 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
     rowNumberDisplayMode,
     rowPinningDisplayMode,
     selectAllMode,
-    sortingFns,
+    sortFns,
     ...rest,
   } as MRT_DefinedTableOptions<TData>;
 };

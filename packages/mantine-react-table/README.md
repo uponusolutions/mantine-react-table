@@ -1,4 +1,4 @@
-# Mantine React Table Open
+# Mantine React Table Fork
 
 > **Unofficial fork** of [mantine-react-table](https://github.com/KevinVandy/mantine-react-table) that provides support for Mantine V8 & V9.
 
@@ -8,7 +8,7 @@ View the [Docs Site](https://www.mantine-react-table.com/)
 
 ### _Quickly Create React Data Tables with Mantine_
 
-### __Built with [Mantine <sup>V8 & V9</sup>](https://mantine.dev/) and [TanStack Table <sup>V8</sup>](https://tanstack.com/table/v8)__
+### __Built with [Mantine <sup>V8 & V9</sup>](https://mantine.dev/) and [TanStack Table <sup>V9</sup>](https://tanstack.com/table/latest)__
 
 <img src="https://mantine-react-table.com/banner.png" alt="MRT" height="50"/>
 
@@ -16,7 +16,8 @@ View the [Docs Site](https://www.mantine-react-table.com/)
 
 | mantine-react-table | Mantine | React |
 | --- | --- | --- |
-| v9.x (`latest`) | Mantine V9 | React 19+ |
+| v10.x (`latest`) | Mantine V9 | React 19.2+ |
+| v9.x (TanStack Table v8) | Mantine V9 | React 19+ |
 | v8.x | Mantine V8 | React 18+ |
 
 Use `npm install mantine-react-table@^8` to install the Mantine V8 compatible version.

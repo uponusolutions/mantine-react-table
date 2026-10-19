@@ -1,6 +1,6 @@
 import { useMemo, useRef, useState } from 'react';
 
-import { useReactTable } from '@tanstack/react-table';
+import { type TableOptions, useTable } from '@tanstack/react-table';
 
 import {
   type MRT_Cell,
@@ -8,7 +8,7 @@ import {
   type MRT_ColumnDef,
   type MRT_ColumnFilterFnsState,
   type MRT_ColumnOrderState,
-  type MRT_ColumnSizingInfoState,
+  type MRT_ColumnResizingState,
   type MRT_DefinedTableOptions,
   type MRT_DensityState,
   type MRT_FilterOption,
@@ -17,6 +17,7 @@ import {
   type MRT_Row,
   type MRT_RowData,
   type MRT_StatefulTableOptions,
+  type MRT_TableFeatures,
   type MRT_TableInstance,
   type MRT_TableState,
   type MRT_Updater,
@@ -37,7 +38,7 @@ import {
   showRowSelectionColumn,
   showRowSpacerColumn,
 } from '../utils/displayColumn.utils';
-import { createRow } from '../utils/tanstack.helpers';
+import { createMRT_TableFeatures, createRow } from '../utils/tanstack.helpers';
 import { getMRT_RowActionsColumnDef } from './display-columns/getMRT_RowActionsColumnDef';
 import { getMRT_RowDragColumnDef } from './display-columns/getMRT_RowDragColumnDef';
 import { getMRT_RowExpandColumnDef } from './display-columns/getMRT_RowExpandColumnDef';
@@ -48,7 +49,7 @@ import { getMRT_RowSpacerColumnDef } from './display-columns/getMRT_RowSpacerCol
 import { useMRT_Effects } from './useMRT_Effects';
 
 /**
- * The MRT hook that wraps the TanStack useReactTable hook and adds additional functionality
+ * The MRT hook that wraps the TanStack useTable hook and adds additional functionality
  * @param definedTableOptions - table options with proper defaults set
  * @returns the MRT table instance
  */
@@ -67,6 +68,24 @@ export const useMRT_TableInstance = <TData extends MRT_RowData>(
   const topToolbarRef = useRef<HTMLDivElement | null>(null);
   const tableHeadRef = useRef<HTMLTableSectionElement | null>(null);
   const tableFooterRef = useRef<HTMLTableSectionElement | null>(null);
+
+  //the TanStack features (incl. row models and fn registries) cannot change after mount
+  const [features] = useState(() =>
+    createMRT_TableFeatures({
+      aggregationFns: definedTableOptions.aggregationFns,
+      coreRowModel: definedTableOptions.coreRowModel,
+      expandedRowModel: definedTableOptions.expandedRowModel,
+      facetedMinMaxValues: definedTableOptions.facetedMinMaxValues,
+      facetedRowModel: definedTableOptions.facetedRowModel,
+      facetedUniqueValues: definedTableOptions.facetedUniqueValues,
+      filteredRowModel: definedTableOptions.filteredRowModel,
+      filterFns: definedTableOptions.filterFns,
+      groupedRowModel: definedTableOptions.groupedRowModel,
+      paginatedRowModel: definedTableOptions.paginatedRowModel,
+      sortedRowModel: definedTableOptions.sortedRowModel,
+      sortFns: definedTableOptions.sortFns,
+    }),
+  );
 
   //transform initial state with proper column order
   const initialState: Partial<MRT_TableState<TData>> = useMemo(() => {
@@ -108,9 +127,16 @@ export const useMRT_TableInstance = <TData extends MRT_RowData>(
   const [columnOrder, onColumnOrderChange] = useState<MRT_ColumnOrderState>(
     initialState.columnOrder ?? [],
   );
-  const [columnSizingInfo, onColumnSizingInfoChange] =
-    useState<MRT_ColumnSizingInfoState>(
-      initialState.columnSizingInfo ?? ({} as MRT_ColumnSizingInfoState),
+  const [columnResizing, onColumnResizingChange] =
+    useState<MRT_ColumnResizingState>(
+      initialState.columnResizing ?? {
+        columnSizingStart: [],
+        deltaOffset: null,
+        deltaPercentage: null,
+        isResizingColumn: false,
+        startOffset: null,
+        startSize: null,
+      },
     );
   const [density, setDensity] = useState<MRT_DensityState>(
     initialState?.density ?? 'md',
@@ -160,7 +186,7 @@ export const useMRT_TableInstance = <TData extends MRT_RowData>(
   definedTableOptions.state = {
     columnFilterFns,
     columnOrder,
-    columnSizingInfo,
+    columnResizing,
     creatingRow,
     density,
     draggingColumn,
@@ -187,7 +213,7 @@ export const useMRT_TableInstance = <TData extends MRT_RowData>(
   //don't recompute columnDefs while resizing column or dragging column/row
   const columnDefsRef = useRef<MRT_ColumnDef<TData>[]>([]);
   statefulTableOptions.columns =
-    statefulTableOptions.state.columnSizingInfo.isResizingColumn ||
+    statefulTableOptions.state.columnResizing.isResizingColumn ||
     statefulTableOptions.state.draggingColumn ||
     statefulTableOptions.state.draggingRow
       ? columnDefsRef.current
@@ -245,15 +271,30 @@ export const useMRT_TableInstance = <TData extends MRT_RowData>(
     ],
   );
 
-  //@ts-ignore
-  const table = useReactTable({
+  const reactTable = useTable<MRT_TableFeatures, TData>({
     onColumnOrderChange,
-    onColumnSizingInfoChange,
+    onColumnResizingChange,
     onGroupingChange,
     onPaginationChange,
     ...statefulTableOptions,
+    features,
     globalFilterFn: statefulTableOptions.filterFns?.[globalFilterFn ?? 'fuzzy'],
-  }) as MRT_TableInstance<TData>;
+  } as unknown as TableOptions<MRT_TableFeatures, TData>);
+
+  //keep one stable MRT table instance across renders (like TanStack v8 did)
+  const tableRef = useRef<MRT_TableInstance<TData> | null>(null);
+  if (!tableRef.current) tableRef.current = {} as MRT_TableInstance<TData>;
+  const table = Object.assign(
+    tableRef.current,
+    reactTable,
+  ) as unknown as MRT_TableInstance<TData>;
+
+  //TanStack v9 removed `table.getState()`; MRT provides a snapshot of the last render
+  const tableState = {
+    ...statefulTableOptions.state,
+    ...reactTable.state,
+  } as MRT_TableState<TData>;
+  table.getState = () => tableState;
 
   table.refs = {
     bottomToolbarRef,

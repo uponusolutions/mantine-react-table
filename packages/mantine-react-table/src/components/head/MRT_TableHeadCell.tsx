@@ -65,7 +65,7 @@ export const MRT_TableHeadCell = <TData extends MRT_RowData>({
     refs: { tableHeadCellRefs },
     setHoveredColumn,
   } = table;
-  const { columnSizingInfo, draggingColumn, grouping, hoveredColumn } =
+  const { columnResizing, draggingColumn, grouping, hoveredColumn } =
     getState();
   const { column } = header;
   const { columnDef } = column;
@@ -162,33 +162,31 @@ export const MRT_TableHeadCell = <TData extends MRT_RowData>({
       colSpan={header.colSpan}
       data-column-pinned={isColumnPinned || undefined}
       data-dragging-column={isDraggingColumn || undefined}
-      data-first-right-pinned={
-        (isColumnPinned === 'right' &&
-          column.getIsFirstColumn(isColumnPinned)) ||
+      data-first-end-pinned={
+        (isColumnPinned === 'end' && column.getIsFirstColumn(isColumnPinned)) ||
         undefined
       }
       data-hovered-column-target={isHoveredColumn || undefined}
       data-index={renderedHeaderIndex}
-      data-last-left-pinned={
-        (isColumnPinned === 'left' && column.getIsLastColumn(isColumnPinned)) ||
+      data-last-start-pinned={
+        (isColumnPinned === 'start' &&
+          column.getIsLastColumn(isColumnPinned)) ||
         undefined
       }
       data-resizing={
         (columnResizeMode === 'onChange' &&
-          columnSizingInfo?.isResizingColumn === column.id &&
+          columnResizing?.isResizingColumn === column.id &&
           columnResizeDirection) ||
         undefined
       }
       {...tableCellProps}
       __vars={{
-        '--mrt-table-cell-left':
-          isColumnPinned === 'left'
-            ? `${column.getStart(isColumnPinned)}`
+        '--mrt-table-cell-start':
+          isColumnPinned === 'start'
+            ? `${column.getStart('start')}`
             : undefined,
-        '--mrt-table-cell-right':
-          isColumnPinned === 'right'
-            ? `${column.getAfter(isColumnPinned)}`
-            : undefined,
+        '--mrt-table-cell-end':
+          isColumnPinned === 'end' ? `${column.getAfter('end')}` : undefined,
       }}
       align={
         columnDefType === 'group'

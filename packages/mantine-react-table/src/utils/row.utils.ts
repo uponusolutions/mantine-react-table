@@ -1,6 +1,6 @@
 import { type ChangeEvent, type MouseEvent } from 'react';
 
-import { rankGlobalFuzzy } from '../fns/sortingFns';
+import { rankGlobalFuzzy } from '../fns/sortFns';
 import {
   type MRT_Row,
   type MRT_RowData,
@@ -14,7 +14,7 @@ export const getMRT_Rows = <TData extends MRT_RowData>(
 ): MRT_Row<TData>[] => {
   const {
     getCenterRows,
-    getPrePaginationRowModel,
+    getPrePaginatedRowModel,
     getRowModel,
     getState,
     getTopRows,
@@ -31,19 +31,17 @@ export const getMRT_Rows = <TData extends MRT_RowData>(
 
   const isRankingRows = getIsRankingRows(table);
 
-  let rows: MRT_Row<TData>[] = [];
+  let rows: MRT_Row<TData>[];
   if (!isRankingRows) {
     rows =
       !enableRowPinning || rowPinningDisplayMode?.includes('sticky')
         ? all
-          ? getPrePaginationRowModel().rows
+          ? getPrePaginatedRowModel().rows
           : getRowModel().rows
         : getCenterRows();
   } else {
     // fuzzy ranking adjustments
-    rows = getPrePaginationRowModel().rows.sort((a, b) =>
-      rankGlobalFuzzy(a, b),
-    );
+    rows = getPrePaginatedRowModel().rows.sort((a, b) => rankGlobalFuzzy(a, b));
     if (enablePagination && !manualPagination && !all) {
       const start = pagination.pageIndex * pagination.pageSize;
       rows = rows.slice(start, start + pagination.pageSize);
@@ -174,14 +172,15 @@ export const getMRT_RowSelectionHandler =
 
     const paginationOffset = manualPagination ? 0 : pageSize * pageIndex;
 
+    // read all selection state before writing any: TanStack v9 getters read the live state
     const wasCurrentRowChecked = getIsRowSelected({ row, table });
-
-    // toggle selection of this row
-    row.toggleSelected(value ?? !wasCurrentRowChecked);
+    const wereAllSubRowsSelected =
+      row.getCanSelectSubRows() && row.getIsAllSubRowsSelected();
 
     const changedRowIds = new Set<string>([row.id]);
 
     // if shift key is pressed, select all rows between last selected and this one
+    let batchRows: MRT_Row<TData>[] = [];
     if (
       enableBatchRowSelection &&
       enableMultiRowSelection &&
@@ -209,19 +208,24 @@ export const getMRT_RowSelectionHandler =
         // toggle selection of all rows between last selected and this one
         // but only if the last selected row is not the same as the current one
         if (wasCurrentRowChecked !== isLastIndexChecked) {
-          for (let i = start; i <= end; i++) {
-            rows[i].toggleSelected(!wasCurrentRowChecked);
-            changedRowIds.add(rows[i].id);
-          }
+          batchRows = rows.slice(start, end + 1);
         }
       }
     }
+
+    // toggle selection of this row
+    row.toggleSelected(value ?? !wasCurrentRowChecked);
+
+    batchRows.forEach((r) => {
+      r.toggleSelected(!wasCurrentRowChecked);
+      changedRowIds.add(r.id);
+    });
 
     // record the last selected row id
     lastSelectedRowId.current = row.id;
 
     // if all sub rows were selected, unselect them
-    if (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected()) {
+    if (wereAllSubRowsSelected) {
       row.subRows?.forEach((r) => r.toggleSelected(false));
     }
 

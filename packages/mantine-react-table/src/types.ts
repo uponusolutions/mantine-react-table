@@ -8,15 +8,17 @@ import {
 
 import {
   type AccessorFn,
-  type AggregationFn,
+  type AggregationFnDef,
   type Cell,
   type Column,
   type ColumnDef,
   type ColumnFiltersState,
   type ColumnOrderState,
+  type ColumnPinningPosition,
   type ColumnPinningState,
-  type ColumnSizingInfoState,
+  type columnResizingState,
   type ColumnSizingState,
+  type ColumnVisibilityState,
   type DeepKeys,
   type DeepValue,
   type ExpandedState,
@@ -28,13 +30,14 @@ import {
   type PaginationState,
   type Row,
   type RowSelectionState,
-  type SortingFn,
+  type SortFn,
   type SortingState,
+  type StockFeatures,
   type Table,
+  type TableFeatures,
   type TableOptions,
   type TableState,
   type Updater,
-  type VisibilityState,
 } from '@tanstack/react-table';
 import {
   type VirtualItem,
@@ -75,14 +78,13 @@ import { type DateInputProps } from '@mantine/dates';
 
 import { type MRT_AggregationFns } from './fns/aggregationFns';
 import { type MRT_FilterFns } from './fns/filterFns';
-import { type MRT_SortingFns } from './fns/sortingFns';
+import { type MRT_SortFns } from './fns/sortFns';
 import { type MRT_Icons } from './icons';
 
 export type { MRT_Icons };
 
 export type LiteralUnion<T extends U, U = string> =
-  | (Record<never, never> & U)
-  | T;
+  (Record<never, never> & U) | T;
 
 export type Prettify<T> = { [K in keyof T]: T[K] } & unknown;
 
@@ -114,8 +116,11 @@ export type MRT_CellValue = unknown;
 
 export type MRT_ColumnFiltersState = ColumnFiltersState;
 export type MRT_ColumnOrderState = ColumnOrderState;
+export type MRT_ColumnPinningPosition = ColumnPinningPosition;
 export type MRT_ColumnPinningState = ColumnPinningState;
-export type MRT_ColumnSizingInfoState = ColumnSizingInfoState;
+export type MRT_ColumnResizingState = columnResizingState;
+/** @deprecated use `MRT_ColumnResizingState` */
+export type MRT_ColumnSizingInfoState = MRT_ColumnResizingState;
 export type MRT_ColumnSizingState = ColumnSizingState;
 export type MRT_ExpandedState = ExpandedState;
 export type MRT_GroupingState = GroupingState;
@@ -124,7 +129,7 @@ export type MRT_RowSelectionState = RowSelectionState;
 export type MRT_SortingState = SortingState;
 export type MRT_Updater<T> = Updater<T>;
 export type MRT_VirtualItem = VirtualItem;
-export type MRT_VisibilityState = VisibilityState;
+export type MRT_VisibilityState = ColumnVisibilityState;
 
 export type MRT_VirtualizerOptions<
   TScrollElement extends Element | Window = Element | Window,
@@ -150,11 +155,11 @@ export type MRT_RowVirtualizer<
 export type MRT_ColumnHelper<TData extends MRT_RowData> = {
   accessor: <
     TAccessor extends AccessorFn<TData> | DeepKeys<TData>,
-    TValue extends TAccessor extends AccessorFn<TData, infer TReturn>
+    TValue extends (TAccessor extends AccessorFn<TData, infer TReturn>
       ? TReturn
       : TAccessor extends DeepKeys<TData>
         ? DeepValue<TData, TAccessor>
-        : never,
+        : never),
   >(
     accessor: TAccessor,
     column: MRT_DisplayColumnDef<TData, TValue>,
@@ -263,6 +268,32 @@ export interface MRT_RowModel<TData extends MRT_RowData> {
   rowsById: { [key: string]: MRT_Row<TData> };
 }
 
+export type MRT_RowModelOverrides = Partial<
+  Pick<
+    TableFeatures,
+    | 'coreRowModel'
+    | 'expandedRowModel'
+    | 'facetedMinMaxValues'
+    | 'facetedRowModel'
+    | 'facetedUniqueValues'
+    | 'filteredRowModel'
+    | 'groupedRowModel'
+    | 'paginatedRowModel'
+    | 'sortedRowModel'
+  >
+>;
+
+/**
+ * The fixed TanStack Table v9 feature set that MRT registers. Use it as the first generic of TanStack types, e.g. `Row<MRT_TableFeatures, TData>`.
+ */
+export type MRT_TableFeatures = {
+  aggregationFns: Record<string, AggregationFnDef<any, any, any, any>>;
+  filterFns: Record<string, FilterFn<any, any>>;
+  sortFns: Record<string, SortFn<any, any>>;
+} & Omit<StockFeatures, 'cellSelectionFeature' | 'cellSpanningFeature'> &
+  Pick<MRT_RowModelOverrides, 'coreRowModel'> &
+  Required<Omit<MRT_RowModelOverrides, 'coreRowModel'>>;
+
 export type MRT_TableInstance<TData extends MRT_RowData> = {
   getAllColumns: () => MRT_Column<TData>[];
   getAllFlatColumns: () => MRT_Column<TData>[];
@@ -272,16 +303,16 @@ export type MRT_TableInstance<TData extends MRT_RowData> = {
   getCenterRows: () => MRT_Row<TData>[];
   getColumn: (columnId: string) => MRT_Column<TData>;
   getExpandedRowModel: () => MRT_RowModel<TData>;
+  getEndLeafColumns: () => MRT_Column<TData>[];
   getFilteredSelectedRowModel: () => MRT_RowModel<TData>;
   getFlatHeaders: () => MRT_Header<TData>[];
   getHeaderGroups: () => MRT_HeaderGroup<TData>[];
-  getLeftLeafColumns: () => MRT_Column<TData>[];
-  getPaginationRowModel: () => MRT_RowModel<TData>;
+  getPaginatedRowModel: () => MRT_RowModel<TData>;
   getPreFilteredRowModel: () => MRT_RowModel<TData>;
-  getPrePaginationRowModel: () => MRT_RowModel<TData>;
-  getRightLeafColumns: () => MRT_Column<TData>[];
+  getPrePaginatedRowModel: () => MRT_RowModel<TData>;
   getRowModel: () => MRT_RowModel<TData>;
   getSelectedRowModel: () => MRT_RowModel<TData>;
+  getStartLeafColumns: () => MRT_Column<TData>[];
   getState: () => MRT_TableState<TData>;
   getTopRows: () => MRT_Row<TData>[];
   options: MRT_StatefulTableOptions<TData>;
@@ -314,7 +345,7 @@ export type MRT_TableInstance<TData extends MRT_RowData> = {
   setShowGlobalFilter: Dispatch<SetStateAction<boolean>>;
   setShowToolbarDropZone: Dispatch<SetStateAction<boolean>>;
 } & Omit<
-  Table<TData>,
+  Table<MRT_TableFeatures, TData>,
   | 'getAllColumns'
   | 'getAllFlatColumns'
   | 'getAllLeafColumns'
@@ -322,32 +353,38 @@ export type MRT_TableInstance<TData extends MRT_RowData> = {
   | 'getCenterLeafColumns'
   | 'getCenterRows'
   | 'getColumn'
+  | 'getEndLeafColumns'
   | 'getExpandedRowModel'
+  | 'getFilteredSelectedRowModel'
   | 'getFlatHeaders'
   | 'getHeaderGroups'
-  | 'getLeftLeafColumns'
-  | 'getPaginationRowModel'
+  | 'getPaginatedRowModel'
   | 'getPreFilteredRowModel'
-  | 'getPrePaginationRowModel'
-  | 'getRightLeafColumns'
+  | 'getPrePaginatedRowModel'
   | 'getRowModel'
   | 'getSelectedRowModel'
-  | 'getState'
+  | 'getStartLeafColumns'
   | 'getTopRows'
   | 'options'
 >;
 
 export type MRT_DefinedTableOptions<TData extends MRT_RowData> = {
+  aggregationFns: Record<string, MRT_AggregationFnDef<TData>>;
+  filterFns: Record<string, FilterFn<any, any>>;
   icons: MRT_Icons;
   localization: MRT_Localization;
-} & Omit<MRT_TableOptions<TData>, 'icons' | 'localization'>;
+  sortFns: Record<string, SortFn<any, any>>;
+} & Omit<
+  MRT_TableOptions<TData>,
+  'aggregationFns' | 'filterFns' | 'icons' | 'localization' | 'sortFns'
+>;
 
 export type MRT_StatefulTableOptions<TData extends MRT_RowData> = {
   state: Pick<
     MRT_TableState<TData>,
     | 'columnFilterFns'
     | 'columnOrder'
-    | 'columnSizingInfo'
+    | 'columnResizing'
     | 'creatingRow'
     | 'density'
     | 'draggingColumn'
@@ -389,7 +426,7 @@ export type MRT_TableState<TData extends MRT_RowData> = Prettify<
     showProgressBars: boolean;
     showSkeletons: boolean;
     showToolbarDropZone: boolean;
-  } & TableState
+  } & TableState<MRT_TableFeatures>
 >;
 
 export type MRT_ColumnDef<TData extends MRT_RowData, TValue = unknown> = {
@@ -636,10 +673,10 @@ export type MRT_ColumnDef<TData extends MRT_RowData, TValue = unknown> = {
     onSelectFilterMode: (filterMode: MRT_FilterOption) => void;
     table: MRT_TableInstance<TData>;
   }) => ReactNode;
-  sortingFn?: MRT_SortingFn<TData>;
+  sortFn?: MRT_SortFn<TData>;
   visibleInShowHideMenu?: boolean;
 } & Omit<
-  ColumnDef<TData, TValue>,
+  ColumnDef<MRT_TableFeatures, TData, TValue>,
   | 'accessorKey'
   | 'aggregatedCell'
   | 'aggregationFn'
@@ -649,7 +686,7 @@ export type MRT_ColumnDef<TData extends MRT_RowData, TValue = unknown> = {
   | 'footer'
   | 'header'
   | 'id'
-  | 'sortingFn'
+  | 'sortFn'
 >;
 
 export type MRT_DisplayColumnDef<
@@ -677,17 +714,17 @@ export type MRT_Column<TData extends MRT_RowData, TValue = unknown> = {
   footer: string;
   header: string;
 } & Omit<
-  Column<TData, MRT_CellValue>,
+  Column<MRT_TableFeatures, TData, MRT_CellValue>,
   'columnDef' | 'columns' | 'filterFn' | 'footer' | 'header'
 >;
 
 export type MRT_Header<TData extends MRT_RowData, TValue = unknown> = {
   column: MRT_Column<TData, TValue>;
-} & Omit<Header<TData, MRT_CellValue>, 'column'>;
+} & Omit<Header<MRT_TableFeatures, TData, MRT_CellValue>, 'column'>;
 
 export type MRT_HeaderGroup<TData extends MRT_RowData> = {
   headers: MRT_Header<TData>[];
-} & Omit<HeaderGroup<TData>, 'headers'>;
+} & Omit<HeaderGroup<MRT_TableFeatures, TData>, 'headers'>;
 
 export type MRT_Row<TData extends MRT_RowData> = {
   _valuesCache: Record<LiteralUnion<DeepKeys<TData> & string>, any>;
@@ -695,36 +732,57 @@ export type MRT_Row<TData extends MRT_RowData> = {
   getVisibleCells: () => MRT_Cell<TData>[];
   subRows?: MRT_Row<TData>[];
 } & Omit<
-  Row<TData>,
+  Row<MRT_TableFeatures, TData>,
   '_valuesCache' | 'getAllCells' | 'getVisibleCells' | 'subRows'
 >;
 
 export type MRT_Cell<TData extends MRT_RowData, TValue = unknown> = {
   column: MRT_Column<TData, TValue>;
   row: MRT_Row<TData>;
-} & Omit<Cell<TData, TValue>, 'column' | 'row'>;
+} & Omit<Cell<MRT_TableFeatures, TData, TValue>, 'column' | 'row'>;
 
-export type MRT_AggregationOption = keyof typeof MRT_AggregationFns & string;
-
-export type MRT_AggregationFn<TData extends MRT_RowData> =
-  | AggregationFn<TData>
-  | MRT_AggregationOption;
-
-export type MRT_SortingOption = LiteralUnion<
-  keyof typeof MRT_SortingFns & string
+export type MRT_AggregationOption = LiteralUnion<
+  keyof typeof MRT_AggregationFns & string
 >;
 
-export type MRT_SortingFn<TData extends MRT_RowData> =
-  | MRT_SortingOption
-  | SortingFn<TData>;
+export type MRT_AggregationFnDef<TData extends MRT_RowData> = AggregationFnDef<
+  MRT_TableFeatures,
+  TData,
+  any,
+  any
+>;
+
+/**
+ * @deprecated v8-style callback. Use an `MRT_AggregationFnDef` (`{ aggregate, merge? }`) instead.
+ */
+export type MRT_LegacyAggregationFn<TData extends MRT_RowData> = (
+  columnId: string,
+  leafRows: MRT_Row<TData>[],
+  childRows: MRT_Row<TData>[],
+) => any;
+
+export type MRT_AggregationFn<TData extends MRT_RowData> =
+  | MRT_AggregationFnDef<TData>
+  | MRT_AggregationOption
+  | MRT_LegacyAggregationFn<TData>;
+
+export type MRT_SortOption = LiteralUnion<keyof typeof MRT_SortFns & string>;
+
+export type MRT_SortFn<TData extends MRT_RowData> =
+  MRT_SortOption | SortFn<MRT_TableFeatures, TData>;
+
+/** @deprecated use `MRT_SortOption` */
+export type MRT_SortingOption = MRT_SortOption;
+
+/** @deprecated use `MRT_SortFn` */
+export type MRT_SortingFn<TData extends MRT_RowData> = MRT_SortFn<TData>;
 
 export type MRT_FilterOption = LiteralUnion<
   keyof typeof MRT_FilterFns & string
 >;
 
 export type MRT_FilterFn<TData extends MRT_RowData> =
-  | FilterFn<TData>
-  | MRT_FilterOption;
+  FilterFn<MRT_TableFeatures, TData> | MRT_FilterOption;
 
 export type MRT_FilterTooltipValueFn<TValue = any> = (value: TValue) => string;
 
@@ -759,6 +817,13 @@ export type MRT_CreateTableFeature<
  * @link https://www.mantine-react-table.com/docs/api/table-options
  */
 export type MRT_TableOptions<TData extends MRT_RowData> = {
+  /**
+   * Custom aggregation functions. Read once on mount.
+   */
+  aggregationFns?: Record<
+    string,
+    MRT_AggregationFnDef<TData> | MRT_LegacyAggregationFn<TData>
+  >;
   columnFilterDisplayMode?: 'custom' | 'popover' | 'subheader';
   columnFilterModeOptions?: Array<
     LiteralUnion<MRT_FilterOption & string>
@@ -835,6 +900,10 @@ export type MRT_TableOptions<TData extends MRT_RowData> = {
   enableToolbarInternalActions?: boolean;
   enableTopToolbar?: boolean;
   expandRowsFn?: (dataRow: TData) => TData[];
+  /**
+   * Custom filter functions. Read once on mount.
+   */
+  filterFns?: Record<string, FilterFn<any, any>>;
   getRowId?: (
     originalRow: TData,
     index: number,
@@ -1001,8 +1070,8 @@ export type MRT_TableOptions<TData extends MRT_RowData> = {
     | ((props: {
         isTopToolbar: boolean;
         table: MRT_TableInstance<TData>;
-      }) => HTMLPropsRef<HTMLDivElement> & ProgressProps)
-    | (HTMLPropsRef<HTMLDivElement> & ProgressProps);
+      }) => HTMLPropsRef<HTMLDivElement> & Partial<ProgressProps>)
+    | (HTMLPropsRef<HTMLDivElement> & Partial<ProgressProps>);
   mantineRowDragHandleProps?:
     | ((props: {
         row: MRT_Row<TData>;
@@ -1171,8 +1240,7 @@ export type MRT_TableOptions<TData extends MRT_RowData> = {
   positionToolbarAlertBanner?: 'bottom' | 'head-overlay' | 'none' | 'top';
   positionToolbarDropZone?: 'both' | 'bottom' | 'none' | 'top';
   renderBottomToolbar?:
-    | ((props: { table: MRT_TableInstance<TData> }) => ReactNode)
-    | ReactNode;
+    ((props: { table: MRT_TableInstance<TData> }) => ReactNode) | ReactNode;
   renderBottomToolbarCustomActions?: (props: {
     table: MRT_TableInstance<TData>;
   }) => ReactNode;
@@ -1229,8 +1297,7 @@ export type MRT_TableOptions<TData extends MRT_RowData> = {
     table: MRT_TableInstance<TData>;
   }) => ReactNode;
   renderTopToolbar?:
-    | ((props: { table: MRT_TableInstance<TData> }) => ReactNode)
-    | ReactNode;
+    ((props: { table: MRT_TableInstance<TData> }) => ReactNode) | ReactNode;
   renderTopToolbarCustomActions?: (props: {
     table: MRT_TableInstance<TData>;
   }) => ReactNode;
@@ -1256,19 +1323,25 @@ export type MRT_TableOptions<TData extends MRT_RowData> = {
   selectAllMode?: 'all' | 'page';
   selectDisplayMode?: 'checkbox' | 'radio' | 'switch';
   /**
+   * Custom sort functions. Read once on mount.
+   */
+  sortFns?: Record<string, SortFn<any, any>>;
+  /**
    * Manage state externally any way you want, then pass it back into MRT.
    */
   state?: Partial<MRT_TableState<TData>>;
-} & Omit<
-  Partial<TableOptions<TData>>,
-  | 'columns'
-  | 'data'
-  | 'defaultColumn'
-  | 'enableRowSelection'
-  | 'expandRowsFn'
-  | 'getRowId'
-  | 'globalFilterFn'
-  | 'initialState'
-  | 'onStateChange'
-  | 'state'
->;
+} & MRT_RowModelOverrides &
+  Omit<
+    Partial<TableOptions<MRT_TableFeatures, TData>>,
+    | 'atoms'
+    | 'columns'
+    | 'data'
+    | 'defaultColumn'
+    | 'enableRowSelection'
+    | 'features'
+    | 'getRowId'
+    | 'globalFilterFn'
+    | 'initialState'
+    | 'mergeOptions'
+    | 'state'
+  >;

@@ -34,8 +34,10 @@ import { parseFromValuesOrFunc } from '../../utils/utils';
 import { MRT_CopyButton } from '../buttons/MRT_CopyButton';
 import { MRT_EditCellTextInput } from '../inputs/MRT_EditCellTextInput';
 
-interface Props<TData extends MRT_RowData, TValue = MRT_CellValue>
-  extends TableTdProps {
+interface Props<
+  TData extends MRT_RowData,
+  TValue = MRT_CellValue,
+> extends TableTdProps {
   cell: MRT_Cell<TData, TValue>;
   numRows?: number;
   renderedColumnIndex?: number;
@@ -79,7 +81,7 @@ export const MRT_TableBodyCell = <TData extends MRT_RowData>({
     setHoveredColumn,
   } = table;
   const {
-    columnSizingInfo,
+    columnResizing,
     creatingRow,
     density,
     draggingColumn,
@@ -258,21 +260,21 @@ export const MRT_TableBodyCell = <TData extends MRT_RowData>({
     <TableTd
       data-column-pinned={isColumnPinned || undefined}
       data-dragging-column={isDraggingColumn || undefined}
-      data-first-right-pinned={
-        (isColumnPinned === 'right' &&
-          column.getIsFirstColumn(isColumnPinned)) ||
+      data-first-end-pinned={
+        (isColumnPinned === 'end' && column.getIsFirstColumn(isColumnPinned)) ||
         undefined
       }
       data-hovered-column-target={isHoveredColumn || undefined}
       data-index={renderedColumnIndex}
-      data-last-left-pinned={
-        (isColumnPinned === 'left' && column.getIsLastColumn(isColumnPinned)) ||
+      data-last-start-pinned={
+        (isColumnPinned === 'start' &&
+          column.getIsLastColumn(isColumnPinned)) ||
         undefined
       }
       data-last-row={renderedRowIndex === numRows - 1 || undefined}
       data-resizing={
         (columnResizeMode === 'onChange' &&
-          columnSizingInfo?.isResizingColumn === column.id &&
+          columnResizing?.isResizingColumn === column.id &&
           columnResizeDirection) ||
         undefined
       }
@@ -280,14 +282,12 @@ export const MRT_TableBodyCell = <TData extends MRT_RowData>({
       __vars={{
         '--mrt-cell-align':
           tableCellProps.align ?? (direction.dir === 'rtl' ? 'right' : 'left'),
-        '--mrt-table-cell-left':
-          isColumnPinned === 'left'
-            ? `${column.getStart(isColumnPinned)}`
+        '--mrt-table-cell-start':
+          isColumnPinned === 'start'
+            ? `${column.getStart('start')}`
             : undefined,
-        '--mrt-table-cell-right':
-          isColumnPinned === 'right'
-            ? `${column.getAfter(isColumnPinned)}`
-            : undefined,
+        '--mrt-table-cell-end':
+          isColumnPinned === 'end' ? `${column.getAfter('end')}` : undefined,
         ...tableCellProps.__vars,
       }}
       className={clsx(

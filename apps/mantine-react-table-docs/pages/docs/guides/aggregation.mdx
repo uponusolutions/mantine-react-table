@@ -28,8 +28,8 @@ Mantine React Table has built-in grouping and aggregation features. There are op
       'enableExpandAll',
       'enableGrouping',
       'enableStickyFooter',
-      'getGroupedRowModel',
       'groupedColumnMode',
+      'groupedRowModel',
       'manualGrouping',
       'mantineToolbarAlertBannerBadgeProps',
       'onGroupingChange',
@@ -136,8 +136,10 @@ One of the cool features of Mantine React Table is that it can automatically agg
 
 There are several built-in aggregation functions available that you can use. They are:
 
-- `count` - Finds the number of rows in a group
+- `count` - Counts all data rows in a group, including the rows in nested groups
 - `extent` - Finds the minimum and maximum values of a group of rows
+- `first` - Returns the value of the first row of a group
+- `last` - Returns the value of the last row of a group
 - `max` - Finds the maximum value of a group of rows
 - `mean` - Finds the average value of a group of rows
 - `median` - Finds the median value of a group of rows
@@ -146,7 +148,7 @@ There are several built-in aggregation functions available that you can use. The
 - `uniqueCount` - Finds the number of unique values of a group of rows
 - `unique` - Finds the unique values of a group of rows
 
-_All of these built-in aggregation functions are from [TanStack Table](https://tanstack.com/table/v8/docs/api/features/grouping#aggregation-functions)_
+_All of these built-in aggregation functions are from [TanStack Table](https://tanstack.com/table/latest/docs/framework/react/guide/grouping)_
 
 ```jsx
 const columns = [
@@ -178,20 +180,35 @@ return <MantineReactTable table={table} />;
 
 #### Custom Aggregation Functions
 
-If none of these pre-built aggregation functions work for you, you can also pass in a custom aggregation function. The aggregation function will be passed in an array of values from the column that you are aggregating. It should return a single value that will be displayed in the aggregated cell.
+If none of these pre-built aggregation functions work for you, you can also pass in a custom aggregation function definition. Since TanStack Table v9, an aggregation function is an object with an `aggregate` function and an optional `merge` function (`MRT_AggregationFnDef`). It should return a single value that will be displayed in the aggregated cell.
 
-If you are specifying a custom aggregation function, it must implement the following type:
-
-```jsx
-export type AggregationFn<TData extends AnyData> = (
-  getLeafRows: () => Row<TData>[],
-  getChildRows: () => Row<TData>[]
-) => any
+```tsx
+const columns = [
+  {
+    accessorKey: 'points',
+    header: 'Points',
+    aggregationFn: {
+      //receives a context with the `rows` of the group, the `column`, a `getValue(row)` helper, and (for grouped rows) the `subRows`
+      aggregate: ({ rows, getValue }) =>
+        rows.reduce((total, row) => total + getValue(row), 0),
+      //optional: combine the results of nested groups instead of aggregating all rows again
+      merge: ({ subRowResults }) =>
+        subRowResults.reduce((total, result) => total + result, 0),
+    },
+    AggregatedCell: ({ cell }) => <div>Team Score: {cell.getValue()}</div>,
+  },
+];
 ```
+
+> The v8-style callback `(columnId, leafRows, childRows) => any` is still accepted, but is deprecated. The `MRT_AggregationFns.*` built-ins are definition objects now and are no longer callable.
+
+You can also pass an array of aggregation functions to the `aggregationFn` column option. The aggregated cell value is then an array with one result per function, in the same order.
+
+You can register named custom aggregation functions with the `aggregationFns` table option (read once on mount) and reference them by name in `aggregationFn`.
 
 ### Aggregation on All Rows in Footer
 
-Mantine React Table does not automatically aggregate all rows for you to calculate totals for the entire table. However, it is still easy enough to do this manually and add in your custom calculations into the `footer` or `Footer` of a column definition. It is recommended that you do any necessary aggregation calculations on your data in a useMemo hook before passing it to the columns footer in your columns definition.
+Mantine React Table does not automatically aggregate all rows for you to calculate totals for the entire table. However, it is still easy enough to do this manually and add in your custom calculations into the `footer` or `Footer` of a column definition. You can also use `column.getAggregationValue()` from TanStack Table v9 to aggregate the values of a column for the rows of the table. It is recommended that you do any necessary aggregation calculations on your data in a useMemo hook before passing it to the columns footer in your columns definition.
 
 ```jsx
 //calculate the total points for all players in the table in a useMemo hook

@@ -26,6 +26,7 @@ Mantine React Table has a built-in row-selection feature and makes it easy to ma
     new Set([
       'enableBatchRowSelection',
       'enableMultiRowSelection',
+      'enableRowRangeSelection',
       'enableRowSelection',
       'enableSelectAll',
       'enableSubRowSelection',
@@ -55,6 +56,8 @@ const table = useMantineReactTable({ columns, data, enableRowSelection: true });
 ### Batch Row Selection
 
 By default, when the user holds down the <kbd>Shift</kbd> key and clicks a row, all rows between the last selected row and the clicked row will be selected. This can be disabled with the `enableBatchRowSelection` table option.
+
+> TanStack Table v9 has its own Shift range selection in `row.getToggleSelectedHandler()` (the `enableRowRangeSelection` option). MRT turns it off by default (`enableRowRangeSelection: false`), because MRT's `enableBatchRowSelection` already handles it.
 
 ```jsx
 const table = useMantineReactTable({
@@ -98,6 +101,8 @@ const table = useMantineReactTable({
 
 return <MantineReactTable table={table} />;
 ```
+
+> Since TanStack Table v9, the `rowSelection` state is `Record<string, true>` (`MRT_RowSelectionState`): selected rows are present with the value `true` and unselected rows are removed instead of being set to `false`. `table.getIsSomeRowsSelected()` and `table.getIsSomePageRowsSelected()` are `true` whenever at least one row is selected (also if all rows are selected).
 
 #### Read Row Selection State or rows from Table Instance
 

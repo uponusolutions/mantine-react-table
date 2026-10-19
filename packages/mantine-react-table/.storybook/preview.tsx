@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { addons } from '@storybook/preview-api';
-import { Preview } from '@storybook/react';
-import { useDarkMode, DARK_MODE_EVENT_NAME } from 'storybook-dark-mode';
+
 import {
   Anchor,
   ColorSchemeScript,
@@ -11,16 +9,20 @@ import {
   Stack,
   Text,
 } from '@mantine/core';
+
+import type { Preview } from '@storybook/react-vite';
+import { ContextMenuProvider } from 'mantine-contextmenu';
+import { DARK_MODE_EVENT_NAME, useDarkMode } from 'storybook-dark-mode';
 import '@mantine/core/styles.css';
 import '@mantine/dates/styles.css'; //if using mantine date picker features
 import 'mantine-contextmenu/styles.css';
-import { ContextMenuProvider } from 'mantine-contextmenu';
+
+import { addons } from 'storybook/preview-api';
 
 const channel = addons.getChannel();
 
 const preview: Preview = {
   parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
     controls: {
       matchers: {
         color: /(background|color)$/i,

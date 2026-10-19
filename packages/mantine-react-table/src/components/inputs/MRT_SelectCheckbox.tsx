@@ -124,6 +124,7 @@ export const MRT_SelectCheckbox = <TData extends MRT_RowData>({
         ) : (
           <Checkbox
             indeterminate={
+              //since v9, `getIsSomeRowsSelected` is true if at least one row is selected, which is fine here because `!isChecked` is checked first
               !isChecked && selectAll
                 ? table.getIsSomeRowsSelected()
                 : row?.getIsSomeSelected() && row.getCanSelectSubRows()

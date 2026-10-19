@@ -80,7 +80,7 @@ const longData = [...Array(500)].map(() => ({
   city: faker.location.city(),
   country: faker.location.country(),
   email: faker.internet.email(),
-  favoriteColor: faker.internet.color(),
+  favoriteColor: faker.color.rgb(),
   favoriteQuote: faker.lorem.sentence(),
   firstName: faker.person.firstName(),
   lastName: faker.person.lastName(),

@@ -21,7 +21,7 @@ import {
   IconMoonStars,
 } from '@tabler/icons-react';
 import { useMediaQuery } from '@mantine/hooks';
-import docsearch from '@docsearch/js';
+import docsearch from '@docsearch/js/docsearch';
 import '@docsearch/css';
 import { getPrimaryColor } from '@uponu-solutions/mantine-react-table';
 import { useRouter } from 'next/router';
@@ -47,7 +47,7 @@ export const TopBar = ({ navOpen, setNavOpen }: Props) => {
       docsearch({
         appId: 'GA9W0E15I8',
         apiKey: 'd1d8da70283d84d7669881d993eff727',
-        indexName: '@uponu-solutions/mantine-react-table',
+        indices: ['@uponu-solutions/mantine-react-table'],
         container: '#docsearch',
       });
     }
@@ -61,8 +61,9 @@ export const TopBar = ({ navOpen, setNavOpen }: Props) => {
             --docsearch-primary-color: ${theme.colors[theme.primaryColor][8]};
             --docsearch-highlight-color: ${theme.colors[theme.primaryColor][8]};
             --docsearch-logo-color: ${theme.colors[theme.primaryColor][8]};
-            ${!isLightTheme
-              ? `--docsearch-container-background: rgba(11, 11, 11, 0.8);
+            ${
+              !isLightTheme
+                ? `--docsearch-container-background: rgba(11, 11, 11, 0.8);
             --docsearch-footer-background: #222;
             --docsearch-hit-background: #333;
             --docsearch-hit-color: #fff;
@@ -73,7 +74,8 @@ export const TopBar = ({ navOpen, setNavOpen }: Props) => {
             --docsearch-searchbox-focus-background: #000;
             --docsearch-text-color: #fff;
            `
-              : ''}
+                : ''
+            }
           }
         `}
       </style>

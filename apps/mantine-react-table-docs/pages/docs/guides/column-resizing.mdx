@@ -31,8 +31,8 @@ Mantine React Table has a built-in column resizing draggable handle feature.
       'displayColumnDefOptions',
       'enableColumnResizing',
       'layoutMode',
+      'onColumnResizingChange',
       'onColumnSizingChange',
-      'onColumnSizingInfoChange',
     ])
   }
 />
@@ -47,9 +47,7 @@ Mantine React Table has a built-in column resizing draggable handle feature.
 
 ### Relevant State
 
-<StateOptionsTable
-  onlyOptions={new Set(['columnSizing', 'columnSizingInfo'])}
-/>
+<StateOptionsTable onlyOptions={new Set(['columnResizing', 'columnSizing'])} />
 
 ### Initial Column Sizes
 

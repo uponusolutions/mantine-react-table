@@ -1,10 +1,6 @@
 import { Box, Stack } from '@mantine/core';
 
-import {
-  MantineReactTable,
-  MRT_AggregationFns,
-  type MRT_ColumnDef,
-} from '../../src';
+import { MantineReactTable, type MRT_ColumnDef } from '../../src';
 
 import { faker } from '@faker-js/faker';
 import { type Meta } from '@storybook/react';
@@ -176,10 +172,7 @@ export const MultiAggregationPerColumn = () => (
           </>
         ),
         //manually set multiple aggregation functions
-        aggregationFn: (columnId, leafRows: any, childRows: any) => [
-          MRT_AggregationFns.min(columnId, leafRows, childRows),
-          MRT_AggregationFns.max(columnId, leafRows, childRows),
-        ],
+        aggregationFn: ['min', 'max'],
         Footer: () => (
           <Stack>
             Average Age:
@@ -258,6 +251,79 @@ export const MultiAggregationPerColumn = () => (
       expanded: true,
       grouping: ['state', 'gender'],
       isFullScreen: true,
+      pagination: { pageIndex: 0, pageSize: 20 },
+    }}
+  />
+);
+
+export const CustomAggregationFnDef = () => (
+  <MantineReactTable
+    columns={[
+      { accessorKey: 'firstName', enableGrouping: false, header: 'First Name' },
+      { accessorKey: 'lastName', enableGrouping: false, header: 'Last Name' },
+      {
+        accessorKey: 'age',
+        AggregatedCell: ({ cell }) => (
+          <>
+            Age range:{' '}
+            <Box style={{ color: 'green', fontWeight: 'bold' }}>
+              {cell.getValue<string>()}
+            </Box>
+          </>
+        ),
+        //custom aggregation function definition
+        aggregationFn: {
+          aggregate: (ctx) => {
+            const ages = ctx.rows.map((row) => row.getValue<number>('age'));
+            return `${Math.min(...ages)} - ${Math.max(...ages)}`;
+          },
+        },
+        header: 'Age',
+      },
+      { accessorKey: 'gender', header: 'Gender' },
+      { accessorKey: 'state', header: 'State' },
+    ]}
+    data={data}
+    enableGrouping
+    initialState={{
+      expanded: true,
+      grouping: ['state'],
+      pagination: { pageIndex: 0, pageSize: 20 },
+    }}
+  />
+);
+
+export const LegacyAggregationCallback = () => (
+  <MantineReactTable
+    columns={[
+      { accessorKey: 'firstName', enableGrouping: false, header: 'First Name' },
+      { accessorKey: 'lastName', enableGrouping: false, header: 'Last Name' },
+      {
+        accessorKey: 'age',
+        AggregatedCell: ({ cell }) => (
+          <>
+            Sum:{' '}
+            <Box style={{ color: 'green', fontWeight: 'bold' }}>
+              {cell.getValue<number>()}
+            </Box>
+          </>
+        ),
+        //deprecated v8-style callback
+        aggregationFn: (columnId, leafRows) =>
+          leafRows.reduce(
+            (sum, row) => sum + row.getValue<number>(columnId),
+            0,
+          ),
+        header: 'Age',
+      },
+      { accessorKey: 'gender', header: 'Gender' },
+      { accessorKey: 'state', header: 'State' },
+    ]}
+    data={data}
+    enableGrouping
+    initialState={{
+      expanded: true,
+      grouping: ['state'],
       pagination: { pageIndex: 0, pageSize: 20 },
     }}
   />

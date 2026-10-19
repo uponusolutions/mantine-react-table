@@ -52,7 +52,7 @@ const Example = () => {
       columns={columns}
       data={data}
       enableColumnPinning
-      initialState={{ columnPinning: { left: ['state'], right: ['city'] } }}
+      initialState={{ columnPinning: { end: ['city'], start: ['state'] } }}
     />
   );
 };

@@ -7,3 +7,4 @@ allowBuilds:
   esbuild: false
   sharp: false
   unrs-resolver: false
+preferWorkspacePackages: true

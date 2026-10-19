@@ -3,7 +3,7 @@ import '@mantine/core/styles.layer.css';
 import '@mantine/dates/styles.layer.css'; //if using mantine date picker features
 import '@mantine/code-highlight/styles.layer.css';
 import '@uponu-solutions/mantine-react-table/styles.css';
-import { useState } from 'react';
+import { type ScriptHTMLAttributes, useState } from 'react';
 import { type AppProps } from 'next/app';
 import Head from 'next/head';
 import PlausibleProvider from 'next-plausible';
@@ -43,7 +43,7 @@ function App({ Component, pageProps }: AppProps) {
         <title>Mantine React Table</title>
         <meta
           name="description"
-          content="Mantine React Table, a fully featured Mantine implementation of TanStack React Table V8. Written from the ground up in TypeScript."
+          content="Mantine React Table, a fully featured Mantine implementation of TanStack React Table V9. Written from the ground up in TypeScript."
         />
         <link
           rel="canonical"
@@ -71,8 +71,14 @@ function App({ Component, pageProps }: AppProps) {
         )}
       </Head>
       <PlausibleProvider
-        domain="v2.mantine-react-table.com"
+        src="/proxy/js/script.js"
         enabled={process.env.NODE_ENV === 'production'}
+        scriptProps={
+          {
+            'data-api': '/proxy/api/event',
+            'data-domain': 'v2.mantine-react-table.com',
+          } as ScriptHTMLAttributes<HTMLScriptElement>
+        }
       >
         <ThemeContextProvider>
           <MDXProvider components={mdxComponents}>

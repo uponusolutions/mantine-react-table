@@ -222,7 +222,7 @@ export const FeatureTable = () => {
       initialState={{
         sorting: [{ id: 'feature', desc: false }],
         density: 'xs',
-        columnPinning: { left: ['feature'] },
+        columnPinning: { end: [], start: ['feature'] },
       }}
     />
   );

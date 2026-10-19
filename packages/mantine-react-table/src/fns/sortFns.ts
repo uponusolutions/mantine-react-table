@@ -1,11 +1,11 @@
 import { compareItems, type RankingInfo } from '@tanstack/match-sorter-utils';
-import { type Row, sortingFns } from '@tanstack/react-table';
+import { type Row, sortFn_alphanumeric, sortFns } from '@tanstack/react-table';
 
 import { type MRT_Row, type MRT_RowData } from '../types';
 
 const fuzzy = <TData extends MRT_RowData>(
-  rowA: Row<TData>,
-  rowB: Row<TData>,
+  rowA: Row<any, TData>,
+  rowB: Row<any, TData>,
   columnId: string,
 ) => {
   let dir = 0;
@@ -16,15 +16,18 @@ const fuzzy = <TData extends MRT_RowData>(
     );
   }
   // Provide a fallback for when the item ranks are equal
-  return dir === 0
-    ? sortingFns.alphanumeric(rowA as Row<any>, rowB as Row<any>, columnId)
-    : dir;
+  return dir === 0 ? sortFn_alphanumeric(rowA, rowB, columnId) : dir;
 };
 
-export const MRT_SortingFns = {
-  ...sortingFns,
+export const MRT_SortFns = {
+  ...sortFns,
   fuzzy,
 };
+
+/**
+ * @deprecated use `MRT_SortFns`
+ */
+export const MRT_SortingFns = MRT_SortFns;
 
 export const rankGlobalFuzzy = <TData extends MRT_RowData>(
   rowA: MRT_Row<TData>,

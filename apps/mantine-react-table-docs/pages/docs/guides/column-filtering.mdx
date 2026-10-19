@@ -33,11 +33,11 @@ Filtering is one of the most powerful features of Mantine React Table and is ena
       'enableFilterMatchHighlighting',
       'enableFilters',
       'filterFns',
+      'facetedMinMaxValues',
+      'facetedRowModel',
+      'facetedUniqueValues',
       'filterFromLeafRows',
-      'getFacetedMinMaxValues',
-      'getFacetedRowModel',
-      'getFacetedUniqueValues',
-      'getFilteredRowModel',
+      'filteredRowModel',
       'mantineFilterAutocompleteProps',
       'mantineFilterCheckboxProps',
       'mantineFilterDateInputProps',
@@ -116,7 +116,7 @@ Faceted values are a list of unique values for a column that gets generated unde
 
 #### Custom Faceted Values
 
-If you are using server-side pagination and filtering, you can still customize the faceted values output with the `getFacetedUniqueValues` and `getFacetedMinMaxValues` table options.
+If you are using server-side pagination and filtering, you can still customize the faceted values output with the `facetedUniqueValues` and `facetedMinMaxValues` table options. These options replace the TanStack Table v8 `getFacetedUniqueValues` and `getFacetedMinMaxValues` options: they receive the `table` and the `columnId` and return a function that returns the value. They are read once on mount.
 
 ```tsx
 const table = useMantineReactTable({
@@ -124,12 +124,12 @@ const table = useMantineReactTable({
   data,
   enableFacetedValues: true,
   //if using server-side pagination and filtering
-  getFacetedMinMaxValues: (table) => {
+  facetedMinMaxValues: (table, columnId) => () => {
     //fetch min and max values from server
     return [minValue, maxValue];
   },
   //if using server-side filtering
-  getFacetedUniqueValues: (table) => {
+  facetedUniqueValues: (table, columnId) => () => {
     const uniqueValueMap = new Map<string, number>();
     //fetch unique values from server, ideally including the count of each unique value
     return uniqueValueMap;
@@ -175,7 +175,7 @@ By default, Mantine React Table uses a `fuzzy` filtering algorithm based on the 
 
 ##### Pre-built TanStack Table Filter Functions
 
-> Pre-built filter functions from TanStack Table include `includesString`, `includesStringSensitive`, `equalsString`, `equalsStringSensitive`, `arrIncludes`, `arrIncludesAll`, `arrIncludesSome`, `weakEquals`, and `inNumberRange`. View more information about these algorithms in the [TanStack Table Filter docs](https://tanstack.com/table/v8/docs/api/features/filters#filter-functions).
+> Pre-built filter functions from TanStack Table include `includesString`, `includesStringSensitive`, `equalsString`, `equalsStringSensitive`, `arrHas`, `arrIncludes`, `arrIncludesAll`, `arrIncludesSome`, `weakEquals`, `inNumberRange`, and `inDateRange`. View more information about these algorithms in the [TanStack Table Filter docs](https://tanstack.com/table/latest/docs/framework/react/guide/column-filtering).
 
 You can specify either a pre-built filter function, from Mantine React Table or TanStack Table, or you can even specify _your own custom filter function_ in the `filterFn` column option.
 

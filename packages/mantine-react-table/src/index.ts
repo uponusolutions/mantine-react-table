@@ -70,7 +70,7 @@ export * from './components/toolbar/MRT_TopToolbar';
 //fns
 export * from './fns/aggregationFns';
 export * from './fns/filterFns';
-export * from './fns/sortingFns';
+export * from './fns/sortFns';
 //hooks
 export * from './hooks/useMantineReactTable';
 export * from './hooks/useMRT_ColumnVirtualizer';

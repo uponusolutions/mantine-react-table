@@ -88,7 +88,8 @@ const Example = () => {
                     : flexRender(
                         header.column.columnDef.Header ??
                           header.column.columnDef.header,
-                        header.getContext(),
+                        //TanStack Table v9: `getContext().table` is the TanStack table, so pass the MRT `table` for MRT render functions
+                        { ...header.getContext(), table },
                       )}
                 </Table.Th>
               ))}

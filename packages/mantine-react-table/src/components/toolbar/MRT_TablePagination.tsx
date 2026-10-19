@@ -31,7 +31,7 @@ export const MRT_TablePagination = <TData extends MRT_RowData>({
 }: Props<TData>) => {
   'use no memo';
   const {
-    getPrePaginationRowModel,
+    getPrePaginatedRowModel,
     getState,
     options: {
       enableToolbarInternalActions,
@@ -61,7 +61,7 @@ export const MRT_TablePagination = <TData extends MRT_RowData>({
     ...props,
   };
 
-  const totalRowCount = rowCount ?? getPrePaginationRowModel().rows.length;
+  const totalRowCount = rowCount ?? getPrePaginatedRowModel().rows.length;
   const numberOfPages = Math.ceil(totalRowCount / pageSize);
   const showFirstLastPageButtons = numberOfPages > 2;
   const firstRowIndex = pageIndex * pageSize;

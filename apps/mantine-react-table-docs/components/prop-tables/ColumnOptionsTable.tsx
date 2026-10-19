@@ -1,8 +1,9 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import Link from 'next/link';
 import {
   MantineReactTable,
   type MRT_ColumnDef,
+  type MRT_ColumnPinningState,
 } from '@uponu-solutions/mantine-react-table';
 import { Anchor, Text } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
@@ -100,20 +101,21 @@ const ColumnOptionsTable = ({ onlyOptions }: Props) => {
     [],
   );
 
-  const [columnPinning, setColumnPinning] = useState({});
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      if (isDesktop) {
-        setColumnPinning({
-          left: ['mrt-row-expand', 'mrt-row-numbers', 'columnOption'],
-          right: ['link'],
-        });
-      } else {
-        setColumnPinning({});
-      }
-    }
-  }, [isDesktop]);
+  const getColumnPinning = (desktop: boolean): MRT_ColumnPinningState =>
+    desktop
+      ? {
+          start: ['mrt-row-expand', 'mrt-row-numbers', 'columnOption'],
+          end: ['link'],
+        }
+      : { end: [], start: [] };
+  const [columnPinning, setColumnPinning] = useState(() =>
+    getColumnPinning(isDesktop),
+  );
+  const [prevIsDesktop, setPrevIsDesktop] = useState(isDesktop);
+  if (isDesktop !== prevIsDesktop) {
+    setPrevIsDesktop(isDesktop);
+    setColumnPinning(getColumnPinning(isDesktop));
+  }
 
   const data = useMemo(() => {
     if (onlyOptions) {
